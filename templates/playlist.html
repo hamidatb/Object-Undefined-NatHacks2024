@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 
+{% block quadrant_buttons %}
+<div id="quadrant-buttons">
+    <!-- Upper-left 'Home' button -->
+    <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">Home</button>
+    <!-- Bottom-left 'Previous' button -->
+    <button id="button-bottom-left" class="quadrant-button" data-url="{{ url_for('show_mood') }}">Previous</button>
+    <!-- Bottom-right 'Thank You' button -->
+    <button id="button-bottom-right" class="quadrant-button" data-url="{{ url_for('thank_you') }}">Finish</button>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h1>{{ mood }} Playlist</h1>

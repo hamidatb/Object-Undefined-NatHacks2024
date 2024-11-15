@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block quadrant_buttons %}
+<div id="quadrant-buttons">
+    <!-- Upper-left 'Home' button -->
+    <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">Home</button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Connecting to Muse Device...</h1>
+    <p>Muse Connected: <span id="muse-status">❌</span></p>
+    <p id="reading-mood" style="display: none;">Reading Mood...</p>
+    <p id="ready-message" style="display: none;">Ready to Go!</p>
+</div>
+
+<script>
+    // Simulate device connection and mood reading
+    setTimeout(() => {
+        document.getElementById('muse-status').textContent = '✅';
+        document.getElementById('reading-mood').style.display = 'block';
+
+        // Simulate mood reading
+        setTimeout(() => {
+            document.getElementById('reading-mood').style.display = 'none';
+            document.getElementById('ready-message').style.display = 'block';
+
+            // Transition to mood detection after a short delay
+            setTimeout(() => {
+                window.location.href = "{{ url_for('detect_mood') }}";
+            }, 3000);
+        }, 5000);
+    }, 2000);
+</script>
+{% endblock %}

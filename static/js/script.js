@@ -11,6 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
         'bottom-right': document.getElementById('button-bottom-right'),
     };
 
+    // Remove undefined buttons
+    Object.keys(buttons).forEach(key => {
+        if (!buttons[key]) {
+            delete buttons[key];
+        }
+    });
+
+    // Set up button click handlers
+    setupButtonClickHandlers();
+
     // Variables to track gaze duration
     let currentQuadrant = null;
     let gazeStartTime = null;
@@ -108,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (button) {
             console.log(`Triggering click on ${quadrant} button`);
             button.click(); // Simulate button click
-            // Optionally, provide visual feedback
+            // Visual feedback
             button.classList.add('active');
             setTimeout(() => {
                 button.classList.remove('active');
@@ -116,6 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             console.warn(`No button found for quadrant ${quadrant}`);
         }
+    }
+
+    function setupButtonClickHandlers() {
+        Object.values(buttons).forEach(button => {
+            const url = button.getAttribute('data-url');
+            if (url) {
+                button.addEventListener('click', () => {
+                    window.location.href = url;
+                });
+            }
+        });
     }
     /// For debugging: Add red border to visualize viewport bounds
     /* const createBorderElement = (top, left, width, height) => {

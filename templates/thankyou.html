@@ -1,9 +1,22 @@
 {% extends "base.html" %}
 
+{% block quadrant_buttons %}
+<!-- Only 'Home' button in the top-left -->
+<div id="quadrant-buttons">
+    <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">Home</button>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <h2>Thank You for Using NeuroTune!</h2>
-    <p>We hope you enjoy your music.</p>
-    <a href="{{ url_for('index') }}"><button>Return to Home</button></a>
+    <h1>Thank You!</h1>
+    <p>Thanks for using NeuroTune.</p>
+    <p>Check out Parkinson’s resources below.</p>
+    <!-- Parkinson's Resources -->
+    <ul>
+        <li><a href="https://www.parkinson.org/">Parkinson's Foundation</a></li>
+        <li><a href="https://www.michaeljfox.org/">Michael J. Fox Foundation</a></li>
+        <!-- Add more resources as needed -->
+    </ul>
 </div>
 {% endblock %}

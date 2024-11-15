@@ -11,3 +11,4 @@ Flask-SocketIO
 keras
 tensorflow
 eventlet
+screeninfo

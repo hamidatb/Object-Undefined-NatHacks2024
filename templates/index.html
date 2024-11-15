@@ -1,10 +1,14 @@
-<!-- templates/index.html -->
 {% extends "base.html" %}
+
+{% block quadrant_buttons %}
+<div id="quadrant-buttons">
+    <button id="button-bottom-right" class="quadrant-button" data-url="{{ url_for('device_connection') }}">Start Session</button>
+</div>
+{% endblock %}
 
 {% block content %}
 <div class="container">
     <h1>Welcome to NeuroTune</h1>
-    <p>Use your gaze to control the music selection.</p>
-    <a href="{{ url_for('detect_mood') }}"><button>Start Session</button></a>
+    <p>Your personalized music experience awaits.</p>
 </div>
 {% endblock %}

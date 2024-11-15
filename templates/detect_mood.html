@@ -1,17 +1,21 @@
 {% extends "base.html" %}
+
+{% block quadrant_buttons %}
+<div id="quadrant-buttons">
+    <!-- Upper-left 'Home' button -->
+    <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">Home</button>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <h2>Select Mode</h2>
-    <form method="POST" action="{{ url_for('detect_mood') }}">
-        <label>
-            <input type="radio" name="mode" value="live" required>
-            Live Mode (Requires Muse S)
-        </label><br>
-        <label>
-            <input type="radio" name="mode" value="test" required>
-            Testing Mode (Simulated Data)
-        </label><br><br>
-        <button type="submit">Proceed</button>
-    </form>
+    <h1>Detecting Mood...</h1>
+    <p>Please wait while we analyze your mood.</p>
 </div>
+
+<script>
+    setTimeout(() => {
+        window.location.href = "{{ url_for('show_mood') }}";
+    }, 5000); // Simulate mood detection for 5 seconds
+</script>
 {% endblock %}

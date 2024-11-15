@@ -46,7 +46,7 @@ def draw_focus_circle(frame, quadrant, frame_width, frame_height):
 
     cv2.circle(frame, center, radius, color, thickness)
 
-def capture_relative_pupil_positions(quadrant, num_samples=100, camera_index=1, output_dir='models/quadrants', interval_ms=20):
+def capture_relative_pupil_positions(quadrant, num_samples=200, camera_index=1, output_dir='models/quadrants', interval_ms=20):
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
     quadrant_dir = os.path.join(output_dir, quadrant)

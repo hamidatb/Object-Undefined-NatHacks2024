@@ -1,8 +1,18 @@
 {% extends "base.html" %}
+
+{% block quadrant_buttons %}
+<div id="quadrant-buttons">
+    <!-- Upper-left 'Home' button -->
+    <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">Home</button>
+    <!-- Bottom-right 'Proceed' button -->
+    <button id="button-bottom-right" class="quadrant-button" data-url="{{ url_for('show_playlist') }}">Proceed</button>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <h2>Mood Detected: {{ mood }}</h2>
-    <p>If this doesn't seem right, you can <a href="{{ url_for('detect_mood') }}">try again</a>.</p>
-    <button onclick="location.href='{{ url_for('show_playlist') }}'">Get Playlist</button>
+    <h1>Your Mood: {{ mood }}</h1>
+    <p>We've detected that you're feeling {{ mood.lower() }}.</p>
+    <p>Proceed to your personalized playlist.</p>
 </div>
 {% endblock %}
