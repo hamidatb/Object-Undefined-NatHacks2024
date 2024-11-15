@@ -1,50 +1,109 @@
+/* static/css/styles.css */
+
+/* General Styling */
 body {
-    background-color: #FFE695;
-    color: #342E1B;
-    font-family: 'Rubik', sans-serif;
-    text-align: center;
     margin: 0;
     padding: 0;
-}
-
-.container {
-    margin-top: 50px;
-}
-
-h1, h2 {
     font-family: 'Rubik', sans-serif;
+    background-color: #FFE695; /* Soft yellow */
+    color: #342E1B; /* Dark brown for text */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Main Container Styling */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: 3.5rem; /* Large title */
+    margin-bottom: 20px;
+    color: #342E1B;
+}
+
+h2, p {
+    font-size: 2rem;
+    margin-bottom: 15px;
 }
 
 button {
+    padding: 15px 30px;
+    font-size: 1.5rem;
     background-color: #342E1B;
     color: #FFE695;
-    padding: 15px 30px;
     border: none;
-    font-size: 18px;
-    margin: 10px;
+    border-radius: 8px;
     cursor: pointer;
-    border-radius: 5px;
+    margin-top: 20px;
 }
 
 button:hover {
-    opacity: 0.8;
+    background-color: #57472F;
+    transform: scale(1.05);
+    transition: 0.3s ease;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+/* Cursor Dot Styling */
+#cursor-dot {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #00FF00; /* Bright green */
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1000;
+    transition: transform 0.5s ease; /* Smooth transitions */
 }
 
-li {
-    margin: 10px 0;
+
+
+/* Quadrant Info Styling */
+#quadrant-info {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #FFE695;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1.8rem;
+    z-index: 1001;
 }
 
-a {
-    color: #342E1B;
-    text-decoration: none;
-    font-weight: bold;
+/* Vignette Effect */
+#vignette-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 900;
+    background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
+    transition: background 0.3s ease;
 }
 
-a:hover {
-    text-decoration: underline;
+.vignette-top_left {
+    background: radial-gradient(circle at 20% 20%, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
+}
+
+.vignette-top_right {
+    background: radial-gradient(circle at 80% 20%, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
+}
+
+.vignette-bottom_left {
+    background: radial-gradient(circle at 20% 80%, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
+}
+
+.vignette-bottom_right {
+    background: radial-gradient(circle at 80% 80%, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
 }

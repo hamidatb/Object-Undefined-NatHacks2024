@@ -1,5 +1,10 @@
+# app.py
+
 # Apply eventlet monkey-patching FIRST
 import eventlet
+import signal
+import sys
+
 eventlet.monkey_patch()
 
 # Import other modules AFTER monkey-patching
@@ -12,8 +17,11 @@ import pandas as pd
 from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-import utils.predict_quadrant 
+from utils.predict_quadrant import QuadrantPredictor
 from utils.sample_mood_model import MoodModel
+import cv2
+
+import time
 
 # Load environment variables
 load_dotenv()
@@ -53,21 +61,91 @@ def load_or_regenerate_model(regenerate=False):
         print("Loaded existing model.")
     return mood_model
 
-# Load the model
+# Load the mood model
 mood_model = load_or_regenerate_model(regenerate=True)
 
-# Initialize Eye Tracker with SOCKETIO???
-eye_tracker = #TODO
+# Initialize Quadrant Predictor
+try:
+    quadrant_predictor = QuadrantPredictor(model_path='models/look_at_quadrants_model.pkl', scaler_path='models/scaler.pkl')
+except FileNotFoundError as e:
+    print(e)
+    exit()
+
+# Global variables
+mood = None
+playlist = []
+tracking_thread = None
+tracking_active = False
+
+# Screen dimensions
+# Dynamically get screen resolution using JavaScript and send to server if needed
+SCREEN_WIDTH = 1920  # Replace with your actual screen width if known
+SCREEN_HEIGHT = 1080  # Replace with your actual screen height if known
+
+# Function to map quadrants to screen coordinates
+def map_quadrant_to_screen(quadrant):
+    if quadrant == 'top_left':
+        return 100, 100  # Adjust based on your preference
+    elif quadrant == 'top_right':
+        return SCREEN_WIDTH - 100, 100
+    elif quadrant == 'bottom_left':
+        return 100, SCREEN_HEIGHT - 100
+    elif quadrant == 'bottom_right':
+        return SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100
+    else:
+        return SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2  # Center
+
+def tracking_function():
+    global tracking_active
+    tracking_active = True
+    cap = cv2.VideoCapture(1)  # Change to 1 if your camera is on index 1
+    if not cap.isOpened():
+        print("Error: Unable to access camera.")
+        tracking_active = False
+        return
+
+    print("Starting quadrant tracking...")
+    while tracking_active:
+        ret, frame = cap.read()
+        if not ret:
+            print("Failed to grab frame from camera.")
+            break
+
+        # Predict the quadrant and get the annotated frame
+        quadrant, annotated_frame = quadrant_predictor.predict(frame)
+
+        # If a quadrant is detected, emit the data
+        if quadrant:
+            screen_x, screen_y = map_quadrant_to_screen(quadrant)
+            # Emit gaze coordinates via SocketIO
+            socketio.emit('gaze', {'x': screen_x, 'y': screen_y, 'quadrant': quadrant})
+            print(f"Gaze Emitted: Quadrant={quadrant}, ScreenX={screen_x}, ScreenY={screen_y}")
+
+        # Optional: Sleep to reduce CPU usage
+        time.sleep(0.02)  # Approximately 50 FPS
+
+    # Release resources
+    cap.release()
+    tracking_active = False
+    print("Quadrant tracking stopped.")
+
+def start_tracking():
+    global tracking_thread, tracking_active
+    if not tracking_active:
+        tracking_thread = threading.Thread(target=tracking_function)
+        tracking_thread.daemon = True  # Ensure thread exits when main program does
+        tracking_thread.start()
+        print("Tracking thread started.")
+    else:
+        print("Tracking is already active.")
+
+# Start tracking automatically when the server starts
+start_tracking()
 
 # Routes
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/start')
-def start_session():
-    threading.Thread(target=eye_tracker.start_tracking).start()
-    return redirect(url_for('detect_mood'))
 
 @app.route('/detect_mood', methods=['GET', 'POST'])
 def detect_mood():
@@ -131,7 +209,8 @@ def callback():
 
 @app.route('/thankyou')
 def thank_you():
-    eye_tracker.stop_tracking()
+    global tracking_active
+    tracking_active = False
     return render_template('thankyou.html')
 
 @socketio.on('connect')
@@ -142,5 +221,31 @@ def handle_connect():
 def handle_disconnect():
     print('Client disconnected')
 
+
+import signal
+import sys
+
+# Define a function to handle termination signals
+def graceful_exit(signum, frame):
+    global tracking_active
+    print("\nGracefully shutting down...")
+
+    # Stop tracking if active
+    if tracking_active:
+        print("Stopping tracking...")
+        tracking_active = False
+        if tracking_thread and tracking_thread.is_alive():
+            tracking_thread.join()  # Wait for the tracking thread to end
+
+    # Stop the Flask-SocketIO server
+    socketio.stop()
+    print("Server stopped.")
+    sys.exit(0)  # Exit the application
+
+# Register the signal handlers
+signal.signal(signal.SIGINT, graceful_exit)  # Handles Ctrl+C
+signal.signal(signal.SIGTERM, graceful_exit) # Handles termination signal
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)
+

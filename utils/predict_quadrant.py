@@ -4,7 +4,6 @@ import dlib
 from imutils import face_utils
 import numpy as np
 import os
-import time
 
 class QuadrantPredictor:
     def __init__(self, model_path='models/look_at_quadrants_model.pkl', scaler_path='models/scaler.pkl'):
@@ -67,99 +66,8 @@ class QuadrantPredictor:
             quadrant = self.model.predict(features_scaled)[0]
             quadrant_map = {0: 'top_left', 1: 'top_right', 2: 'bottom_left', 3: 'bottom_right'}
 
-            # Return the quadrant and the frame
-            return quadrant_map[quadrant], frame
+            # Return the quadrant
+            return quadrant_map[quadrant], None  # Return None for the frame
 
         # If no face is detected, return None
-        return None, frame
-
-
-if __name__ == "__main__":
-    # Initialize the predictor
-    predictor = QuadrantPredictor()
-    quadrant_map = {0: 'top_left', 1: 'top_right', 2: 'bottom_left', 3: 'bottom_right'}
-
-    # Open the webcam
-    cap = cv2.VideoCapture(1)
-
-    if not cap.isOpened():
-        print("Error: Unable to access camera.")
-        exit()
-
-    # Timing variables for tracking quadrant focus time
-    quadrant_start_time = None
-    current_quadrant = None
-    quadrant_times = {'top_left': 0, 'top_right': 0, 'bottom_left': 0, 'bottom_right': 0}
-
-    # Full screen window
-    cv2.namedWindow("Quadrant Prediction", cv2.WND_PROP_FULLSCREEN)
-    cv2.setWindowProperty("Quadrant Prediction", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-
-    print("Press 'q' to quit.")
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("Failed to grab frame from camera.")
-            break
-
-        # Get the frame dimensions
-        frame_height, frame_width = frame.shape[:2]
-
-        # Predict the quadrant and get the annotated frame
-        quadrant, annotated_frame = predictor.predict(frame)
-
-        # Highlight the predicted quadrant with a green filled rectangle
-        if quadrant is not None:
-            # Track time in the current quadrant
-            if quadrant != current_quadrant:
-                if current_quadrant is not None and quadrant_start_time is not None:
-                    elapsed_time = time.time() - quadrant_start_time
-                    quadrant_times[current_quadrant] += elapsed_time
-                    print(f"Time spent in {current_quadrant}: {elapsed_time:.2f} seconds")
-
-                # Update to the new quadrant
-                current_quadrant = quadrant
-                quadrant_start_time = time.time()
-
-            # Define the quadrant areas
-            top_left = (0, 0, frame_width // 2, frame_height // 2)
-            top_right = (frame_width // 2, 0, frame_width, frame_height // 2)
-            bottom_left = (0, frame_height // 2, frame_width // 2, frame_height)
-            bottom_right = (frame_width // 2, frame_height // 2, frame_width, frame_height)
-
-            # Map quadrant names to coordinates
-            quadrant_rects = {
-                'top_left': top_left,
-                'top_right': top_right,
-                'bottom_left': bottom_left,
-                'bottom_right': bottom_right
-            }
-
-            # Get the coordinates for the predicted quadrant
-            x1, y1, x2, y2 = quadrant_rects[quadrant]
-
-            # Draw a green filled rectangle
-            cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), (0, 255, 0), thickness=-1)
-
-        # Show the annotated frame
-        cv2.imshow("Quadrant Prediction", annotated_frame)
-
-        # Quit the application when 'q' is pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            print("Exiting...")
-            break
-
-    # Add the final time spent in the current quadrant
-    if current_quadrant is not None and quadrant_start_time is not None:
-        elapsed_time = time.time() - quadrant_start_time
-        quadrant_times[current_quadrant] += elapsed_time
-        print(f"Time spent in {current_quadrant}: {elapsed_time:.2f} seconds")
-
-    # Print total time spent in each quadrant
-    print("Total Time in Each Quadrant:")
-    for q, t in quadrant_times.items():
-        print(f"{q}: {t:.2f} seconds")
-
-    # Release resources gracefully
-    cap.release()
-    cv2.destroyAllWindows()
+        return None, None

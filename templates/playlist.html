@@ -1,18 +1,16 @@
 {% extends "base.html" %}
+
 {% block content %}
 <div class="container">
-    <h2>Your {{ mood }} Playlist</h2>
+    <h2>Recommended Playlists for Your Mood: {{ mood }}</h2>
     <ul>
-        {% for song in playlist %}
-        <li>
-            {{ song.name }}
-            <form method="POST" action="{{ url_for('play_song') }}">
-                <input type="hidden" name="uri" value="{{ song.uri }}">
-                <button type="submit">Play</button>
-            </form>
-        </li>
+        {% for track in playlist %}
+            <li>
+                {{ track.name }}
+                <button onclick="playSong('{{ track.uri }}')">Play</button>
+            </li>
         {% endfor %}
     </ul>
-    <button onclick="location.href='{{ url_for('thank_you') }}'">End Session</button>
+    <a href="{{ url_for('thank_you') }}"><button>End Session</button></a>
 </div>
 {% endblock %}

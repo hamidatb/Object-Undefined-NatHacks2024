@@ -1,7 +1,10 @@
+<!-- templates/index.html -->
 {% extends "base.html" %}
+
 {% block content %}
 <div class="container">
-    <h1>Hi, Welcome to NeuroTune</h1>
-    <button onclick="location.href='{{ url_for('start_session') }}'">Start Session</button>
+    <h1>Welcome to NeuroTune</h1>
+    <p>Use your gaze to control the music selection.</p>
+    <a href="{{ url_for('detect_mood') }}"><button>Start Session</button></a>
 </div>
 {% endblock %}
