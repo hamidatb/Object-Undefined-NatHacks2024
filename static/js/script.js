@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Variables to track gaze duration
     let currentQuadrant = null;
     let gazeStartTime = null;
-    const GAZE_HOLD_TIME = 5000; // 5 seconds in milliseconds
+    const GAZE_HOLD_TIME = 3000; // 3 seconds in milliseconds
 
     // Function to move cursor to a specific corner
     function moveCursorToCorner(corner) {
