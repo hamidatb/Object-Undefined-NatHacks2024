@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.metrics import classification_report
 
-def load_samples(data_dir='models/quadrants'):
+def load_samples(data_dir='gaze_models/quadrants'):
     """Load samples from JSON files."""
     samples = []
     labels = []
@@ -30,7 +30,7 @@ def load_samples(data_dir='models/quadrants'):
 
     return np.array(samples), np.array(labels)
 
-def train_model(output_path='models/look_at_quadrants_model.pkl', scaler_path='models/scaler.pkl'):
+def train_model(output_path='gaze_models/look_at_quadrants_model.pkl', scaler_path='gaze_models/scaler.pkl'):
     """Train an SVM classifier based on relative pupil positions."""
     # Load samples and labels
     X, y = load_samples()

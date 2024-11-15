@@ -62,7 +62,7 @@ mood_model = load_or_regenerate_model(regenerate=True)
 
 # Initialize Quadrant Predictor
 try:
-    quadrant_predictor = QuadrantPredictor(model_path='models/look_at_quadrants_model.pkl', scaler_path='models/scaler.pkl')
+    quadrant_predictor = QuadrantPredictor(model_path='gaze_models/look_at_quadrants_model.pkl', scaler_path='gaze_models/scaler.pkl')
 except FileNotFoundError as e:
     print(e)
     exit()

@@ -7,7 +7,7 @@ import os
 import time
 
 class QuadrantPredictor:
-    def __init__(self, model_path='models/look_at_quadrants_model.pkl', scaler_path='models/scaler.pkl'):
+    def __init__(self, model_path='gaze_models/look_at_quadrants_model.pkl', scaler_path='gaze_models/scaler.pkl'):
         # Load the trained quadrant model
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model file {model_path} not found. Please train the model first.")

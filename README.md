@@ -23,7 +23,7 @@ NeuroTune/
 │   ├── mood.html
 │   ├── playlist.html
 │   └── thankyou.html
-└── models/
+└── gaze_models/
     └── mood_model.pkl
 ```
 
@@ -60,7 +60,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
                                                scope=SCOPE))
 
 # Load the pre-trained mood detection model
-with open('models/mood_model.pkl', 'rb') as f:
+with open('gaze_models/mood_model.pkl', 'rb') as f:
     mood_model = pickle.load(f)
 
 # Global variables
