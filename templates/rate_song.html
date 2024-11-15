@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block quadrant_buttons %}
+<div id="quadrant-buttons">
+    <!-- Upper-left 'Home' button -->
+    <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">Home</button>
+    <!-- Bottom-left 'Thumbs Down' button -->
+    <button id="button-bottom-left" class="quadrant-button" data-action="dislike">👎</button>
+    <!-- Bottom-right 'Thumbs Up' button -->
+    <button id="button-bottom-right" class="quadrant-button" data-action="like">👍</button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ song.name }}</h1>
+    <img src="{{ url_for('static', filename=song.image_url.split('static/')[1]) }}" alt="Album Cover" style="width:300px;height:300px;">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = {
+        'top-left': document.getElementById('button-top-left'),
+        'bottom-left': document.getElementById('button-bottom-left'),
+        'bottom-right': document.getElementById('button-bottom-right'),
+    };
+
+    // Set up button click handlers
+    setupButtonClickHandlers();
+
+    function setupButtonClickHandlers() {
+        Object.values(buttons).forEach(button => {
+            const url = button.getAttribute('data-url');
+            const action = button.getAttribute('data-action');
+            button.addEventListener('click', () => {
+                if (url) {
+                    window.location.href = url;
+                } else if (action) {
+                    rateSong(action);
+                }
+            });
+        });
+    }
+
+    function rateSong(action) {
+        fetch('{{ url_for("rate_song") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ action: action })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (action === 'dislike') {
+                window.location.href = "{{ url_for('feedback') }}";
+            } else {
+                window.location.href = "{{ url_for('show_playlist') }}";
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+});
+</script>
+{% endblock %}

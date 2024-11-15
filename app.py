@@ -78,6 +78,62 @@ tracking_active = False
 SCREEN_WIDTH = 1920  # Replace with your actual screen width if known
 SCREEN_HEIGHT = 1080  # Replace with your actual screen height if known
 
+# Define test playlists with local MP3 files
+# Define test playlists with local MP3 files
+test_playlists = {
+    'Happy': [
+        {
+            'name': 'Happy - Pharrell Williams',
+            'file_path': 'static/music/happy_pharrell.mp3',
+            'image_url': 'static/images/happy_pharrell.jpg'
+        },
+        {
+            'name': 'Can’t Stop the Feeling - Justin Timberlake',
+            'file_path': 'static/music/cant_stop_feeling.mp3',
+            'image_url': 'static/images/cant_stop_feeling.jpeg'
+        },
+        {
+            'name': 'I Gotta Feeling - Black Eyed Peas',
+            'file_path': 'static/music/i_gotta_feeling.mp3',
+            'image_url': 'static/images/i_gotta_feeling.png'
+        },
+    ],
+    'Sad': [
+        {
+            'name': 'Someone Like You - Adele',
+            'file_path': 'static/music/someone_like_you.mp3',
+            'image_url': 'static/images/someone_like_you.png'
+        },
+        {
+            'name': 'Fix You - Coldplay',
+            'file_path': 'static/music/fix_you.mp3',
+            'image_url': 'static/images/fix_you.jpg'
+        },
+        {
+            'name': 'Let Her Go - Passenger',
+            'file_path': 'static/music/let_her_go.mp3',
+            'image_url': 'static/images/let_her_go.jpg'
+        },
+    ],
+    'Angry': [
+        {
+            'name': 'Break Stuff - Limp Bizkit',
+            'file_path': 'static/music/break_stuff.mp3',
+            'image_url': 'static/images/break_stuff.jpeg'
+        },
+        {
+            'name': 'Get Out My Way - Tedashii feat. Lecrae',
+            'file_path': 'static/music/out_my_way.mp3',
+            'image_url': 'static/images/out_my_way.jpeg'
+        },
+        {
+            'name': 'Elevate - DJ Khalil',
+            'file_path': 'static/music/elevate.mp3',
+            'image_url': 'static/images/elevate.jpeg'
+        },
+    ],
+}
+
 # Function to map quadrants to screen coordinates
 def map_quadrant_to_screen(quadrant):
     if quadrant == 'top_left':
@@ -118,7 +174,7 @@ def tracking_function():
             print(f"Gaze Emitted: Quadrant={quadrant}, ScreenX={screen_x}, ScreenY={screen_y}")
 
         # Optional: Sleep to reduce CPU usage
-        time.sleep(0.02)  # Approximately 50 FPS
+        time.sleep(0.02)  # Approximately 50 FPS]
 
     # Release resources
     cap.release()
@@ -150,9 +206,9 @@ def device_connection():
 @app.route('/detect_mood')
 def detect_mood():
     global mood
-    # Simulate mood detection
+    # will have to integrate this with the mood model backend.
     sample_data = pd.read_csv(os.path.join('static', 'data', 'sample_eeg_data.csv'))
-    mood = mood_model.predict(sample_data)[0]
+    mood = mood_model.predict(sample_data)[0] 
 
     # Render detect_mood.html, which will proceed to show_mood after delay
     return render_template('detect_mood.html')
@@ -164,24 +220,59 @@ def show_mood():
         return redirect(url_for('detect_mood'))
     return render_template('mood.html', mood=mood.capitalize())
 
+
 @app.route('/playlist')
 def show_playlist():
-    global mood, playlist
+    global mood
     if not mood:
         return redirect(url_for('detect_mood'))
-    # [Spotify API logic remains the same]
-    return render_template('playlist.html', playlist=playlist, mood=mood.capitalize())
 
-@app.route('/play_song', methods=['POST'])
-def play_song():
-        data = request.get_json()
-        uri = data.get('uri')
-        token_info = sp_oauth.get_cached_token()
-        if not token_info:
-            return jsonify({'error': 'Unauthorized'}), 401
-        sp = spotipy.Spotify(auth=token_info['access_token'])
-        sp.start_playback(uris=[uri])
-        return jsonify({'status': 'Playing'}), 200
+    # Initialize playlist and current song index in session
+    if 'playlist' not in session:
+        session['playlist'] = test_playlists.get(mood.capitalize(), [])
+        session['current_song_index'] = 0
+
+    playlist = session['playlist']
+    current_song_index = session['current_song_index']
+
+    if current_song_index >= len(playlist):
+        return redirect(url_for('thank_you'))
+
+    current_song = playlist[current_song_index]
+
+    return render_template('playlist.html', song=current_song, mood=mood.capitalize())
+
+@app.route('/rate_song_view')
+def rate_song_view():
+    global mood
+    if not mood:
+        return redirect(url_for('detect_mood'))
+
+    playlist = session.get('playlist', [])
+    current_song_index = session.get('current_song_index', 0)
+
+    if current_song_index >= len(playlist):
+        return redirect(url_for('thank_you'))
+
+    current_song = playlist[current_song_index]
+
+    return render_template('rate_song.html', song=current_song, mood=mood.capitalize())
+
+@app.route('/rate_song', methods=['POST'])
+def rate_song():
+    data = request.get_json()
+    action = data.get('action')
+    if action == 'like':
+        # Handle like action (e.g., add to favorites)
+        pass  # For testing, we'll just pass
+    elif action == 'dislike':
+        # Handle dislike action
+        session['current_song_index'] += 1  # Move to next song
+    return jsonify({'success': True})
+
+@app.route('/feedback')
+def feedback():
+    return render_template('feedback.html')
 
 @app.route('/callback')
 def callback():

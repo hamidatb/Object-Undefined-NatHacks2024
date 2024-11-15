@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block quadrant_buttons %}
+<div id="quadrant-buttons">
+    <!-- Upper-left 'Home' button -->
+    <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">Home</button>
+    <!-- Bottom-right 'Next' button -->
+    <button id="button-bottom-right" class="quadrant-button" data-url="{{ url_for('show_playlist') }}">Next</button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Thanks for your feedback!</h1>
+    <p>We won't show that song anymore.</p>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = {
+        'top-left': document.getElementById('button-top-left'),
+        'bottom-right': document.getElementById('button-bottom-right'),
+    };
+
+    // Set up button click handlers
+    setupButtonClickHandlers();
+
+    function setupButtonClickHandlers() {
+        Object.values(buttons).forEach(button => {
+            const url = button.getAttribute('data-url');
+            button.addEventListener('click', () => {
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -4,46 +4,56 @@
 <div id="quadrant-buttons">
     <!-- Upper-left 'Home' button -->
     <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">Home</button>
-    <!-- Bottom-left 'Previous' button -->
-    <button id="button-bottom-left" class="quadrant-button" data-url="{{ url_for('show_mood') }}">Previous</button>
-    <!-- Bottom-right 'Thank You' button -->
-    <button id="button-bottom-right" class="quadrant-button" data-url="{{ url_for('thank_you') }}">Finish</button>
+    <!-- Bottom-left 'Rate' button -->
+    <button id="button-bottom-left" class="quadrant-button" data-action="rate">Rate</button>
+    <!-- Bottom-right 'Pause' button -->
+    <button id="button-bottom-right" class="quadrant-button" data-action="pause">Pause</button>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>{{ mood }} Playlist</h1>
-    <div class="playlist">
-        {% for song in playlist %}
-        <div class="song">
-            <p>{{ song.name }}</p>
-            <!-- Like and Dislike buttons -->
-            <button class="like-button" data-uri="{{ song.uri }}">Like</button>
-            <button class="dislike-button" data-uri="{{ song.uri }}">Dislike</button>
-        </div>
-        {% endfor %}
-    </div>
+    <h1>{{ song.name }}</h1>
+    <img src="{{ url_for('static', filename=song['image_url']) }}" alt="Album Cover" style="width:300px;height:300px;">
+    <audio id="audio-player" src="{{ url_for('static', filename=song['file_path']) }}" autoplay></audio>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Add event listeners for like and dislike buttons
-        document.querySelectorAll('.like-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const uri = button.getAttribute('data-uri');
-                // Handle like action
-                console.log(`Liked song: ${uri}`);
-            });
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    const audioPlayer = document.getElementById('audio-player');
 
-        document.querySelectorAll('.dislike-button').forEach(button => {
+    const buttons = {
+        'top-left': document.getElementById('button-top-left'),
+        'bottom-left': document.getElementById('button-bottom-left'),
+        'bottom-right': document.getElementById('button-bottom-right'),
+    };
+
+    // Set up button click handlers
+    setupButtonClickHandlers();
+
+    function setupButtonClickHandlers() {
+        Object.values(buttons).forEach(button => {
+            const url = button.getAttribute('data-url');
+            const action = button.getAttribute('data-action');
             button.addEventListener('click', () => {
-                const uri = button.getAttribute('data-uri');
-                // Handle dislike action
-                console.log(`Disliked song: ${uri}`);
+                if (url) {
+                    window.location.href = url;
+                } else if (action) {
+                    if (action === 'rate') {
+                        window.location.href = "{{ url_for('rate_song_view') }}";
+                    } else if (action === 'pause') {
+                        if (audioPlayer.paused) {
+                            audioPlayer.play();
+                            button.textContent = 'Pause';
+                        } else {
+                            audioPlayer.pause();
+                            button.textContent = 'Play';
+                        }
+                    }
+                }
             });
         });
-    });
+    }
+});
 </script>
 {% endblock %}
