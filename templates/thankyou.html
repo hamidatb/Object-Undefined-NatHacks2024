@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Thank you for using NeuroTune!</h1>
+    <button onclick="location.href='{{ url_for('start_session') }}'">Listen to more music</button>
+    <button onclick="window.open('https://www.parkinsons.org/resources')">View Parkinson’s Resources</button>
+</div>
+{% endblock %}

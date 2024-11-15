@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Mood Detected: {{ mood }}</h2>
+    <p>If this doesn't seem right, you can <a href="{{ url_for('detect_mood') }}">try again</a>.</p>
+    <button onclick="location.href='{{ url_for('show_playlist') }}'">Get Playlist</button>
+</div>
+{% endblock %}

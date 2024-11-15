@@ -1,0 +1,50 @@
+body {
+    background-color: #FFE695;
+    color: #342E1B;
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+h1, h2 {
+    font-family: 'Rubik', sans-serif;
+}
+
+button {
+    background-color: #342E1B;
+    color: #FFE695;
+    padding: 15px 30px;
+    border: none;
+    font-size: 18px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin: 10px 0;
+}
+
+a {
+    color: #342E1B;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}

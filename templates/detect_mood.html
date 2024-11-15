@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Select Mode</h2>
+    <form method="POST" action="{{ url_for('detect_mood') }}">
+        <label>
+            <input type="radio" name="mode" value="live" required>
+            Live Mode (Requires Muse S)
+        </label><br>
+        <label>
+            <input type="radio" name="mode" value="test" required>
+            Testing Mode (Simulated Data)
+        </label><br><br>
+        <button type="submit">Proceed</button>
+    </form>
+</div>
+{% endblock %}
