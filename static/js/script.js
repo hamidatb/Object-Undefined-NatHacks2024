@@ -4,6 +4,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const cursorDot = document.getElementById('cursor-dot');
     const quadrantInfo = document.getElementById('quadrant-info');
+    const buttons = {
+        'top-left': document.getElementById('button-top-left'),
+        'top-right': document.getElementById('button-top-right'),
+        'bottom-left': document.getElementById('button-bottom-left'),
+        'bottom-right': document.getElementById('button-bottom-right'),
+    };
+
+    // Variables to track gaze duration
+    let currentQuadrant = null;
+    let gazeStartTime = null;
+    const GAZE_HOLD_TIME = 5000; // 5 seconds in milliseconds
 
     // Function to move cursor to a specific corner
     function moveCursorToCorner(corner) {
@@ -37,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         cursorDot.style.transform = `translate(${x}px, ${y}px)`;
-        console.log(`Moved cursor to ${corner}`);
+        //console.log(`Moved cursor to ${corner}`);
     }
 
     // Function to determine which quadrant the gaze is in
@@ -62,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle gaze data received from the server
     socket.on('gaze', data => {
-        console.log(`Received gaze data: Quadrant=${data.quadrant}, x=${data.x}, y=${data.y}`);
+       //  console.log(`Received gaze data: Quadrant=${data.quadrant}, x=${data.x}, y=${data.y}`);
 
         // Determine which quadrant the gaze data falls into
         const quadrant = getQuadrant(data.x, data.y);
@@ -97,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (button) {
             console.log(`Triggering click on ${quadrant} button`);
             button.click(); // Simulate button click
-            //provide visual feedback
+            // Optionally, provide visual feedback
             button.classList.add('active');
             setTimeout(() => {
                 button.classList.remove('active');

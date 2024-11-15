@@ -80,15 +80,6 @@ button:hover {
 
 
 /* Quadrant Buttons Styling */
-#quadrant-buttons {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Allows gaze cursor to interact without blocking */
-}
-
 .quadrant-button {
     position: absolute;
     width: 200px;
@@ -100,6 +91,17 @@ button:hover {
     font-size: 1.5rem;
     cursor: pointer;
     pointer-events: auto; /* Re-enable pointer events for buttons */
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Add transitions */
+}
+
+.quadrant-button:hover {
+    background-color: #57472F;
+    transform: scale(1.05);
+}
+
+.quadrant-button.active {
+    transform: scale(1.2); /* Button expands */
+    background-color: #FFD700; /* Change to a gold color */
 }
 
 #button-top-left {

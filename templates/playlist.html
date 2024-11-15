@@ -2,15 +2,37 @@
 
 {% block content %}
 <div class="container">
-    <h2>Recommended Playlists for Your Mood: {{ mood }}</h2>
-    <ul>
-        {% for track in playlist %}
-            <li>
-                {{ track.name }}
-                <button onclick="playSong('{{ track.uri }}')">Play</button>
-            </li>
+    <h1>{{ mood }} Playlist</h1>
+    <div class="playlist">
+        {% for song in playlist %}
+        <div class="song">
+            <p>{{ song.name }}</p>
+            <!-- Like and Dislike buttons -->
+            <button class="like-button" data-uri="{{ song.uri }}">Like</button>
+            <button class="dislike-button" data-uri="{{ song.uri }}">Dislike</button>
+        </div>
         {% endfor %}
-    </ul>
-    <a href="{{ url_for('thank_you') }}"><button>End Session</button></a>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Add event listeners for like and dislike buttons
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const uri = button.getAttribute('data-uri');
+                // Handle like action
+                console.log(`Liked song: ${uri}`);
+            });
+        });
+
+        document.querySelectorAll('.dislike-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const uri = button.getAttribute('data-uri');
+                // Handle dislike action
+                console.log(`Disliked song: ${uri}`);
+            });
+        });
+    });
+</script>
 {% endblock %}

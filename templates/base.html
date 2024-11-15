@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeuroTune</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-   <!-- Load the socket.io client library -->
-   <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
-   <!-- Load your custom script -->
-   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- Load the socket.io client library -->
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <!-- Load your custom script -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 <body>
     <!-- Quadrant Info Display -->
@@ -29,5 +29,32 @@
     <div class="container">
         {% block content %}{% endblock %}
     </div>
+
+    <!-- Include this script in your template or base.html -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Define actions for each button
+            document.getElementById('button-top-left').addEventListener('click', () => {
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('detect_mood') }}";
+                }, 300); // 0.3 seconds
+            });
+            document.getElementById('button-top-right').addEventListener('click', () => {
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('show_playlist') }}";
+                }, 300);
+            });
+            document.getElementById('button-bottom-left').addEventListener('click', () => {
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('thank_you') }}";
+                }, 300);
+            });
+            document.getElementById('button-bottom-right').addEventListener('click', () => {
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('thank_you') }}";
+                }, 300);
+            });
+        });
+    </script>
 </body>
 </html>
