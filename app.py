@@ -12,7 +12,7 @@ import pandas as pd
 from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from utils.eye_tracking import EyeTracker
+import utils.predict_quadrant 
 from utils.sample_mood_model import MoodModel
 
 # Load environment variables
@@ -56,8 +56,8 @@ def load_or_regenerate_model(regenerate=False):
 # Load the model
 mood_model = load_or_regenerate_model(regenerate=True)
 
-# Initialize Eye Tracker with SocketIO
-eye_tracker = EyeTracker(socketio, camera_index=1)
+# Initialize Eye Tracker with SOCKETIO???
+eye_tracker = #TODO
 
 # Routes
 @app.route('/')

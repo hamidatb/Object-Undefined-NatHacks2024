@@ -1,11 +1,10 @@
-# utils/predict_quadrant.py
-
 import cv2
 import pickle
 import dlib
 from imutils import face_utils
 import numpy as np
-import os 
+import os
+import time
 
 class QuadrantPredictor:
     def __init__(self, model_path='models/look_at_quadrants_model.pkl', scaler_path='models/scaler.pkl'):
@@ -52,12 +51,6 @@ class QuadrantPredictor:
             left_rect = cv2.boundingRect(left_eye)
             right_rect = cv2.boundingRect(right_eye)
 
-            # Debug: Print bounding box and eye center info
-            print("Bounding Box Left Rect:", left_rect)
-            print("Bounding Box Right Rect:", right_rect)
-            print("Left Eye Center:", left_eye_center)
-            print("Right Eye Center:", right_eye_center)
-
             # Calculate pupil position relative to eye
             left_rel_x = (left_eye_center[0] - left_rect[0]) / left_rect[2]
             left_rel_y = (left_eye_center[1] - left_rect[1]) / left_rect[3]
@@ -66,7 +59,6 @@ class QuadrantPredictor:
 
             # Create feature vector
             features = np.array([left_rel_x, left_rel_y, right_rel_x, right_rel_y]).reshape(1, -1)
-            print("Feature Vector (Before Scaling):", features)
 
             # Scale features (if scaler was used during training)
             features_scaled = self.scaler.transform(features)
@@ -74,27 +66,13 @@ class QuadrantPredictor:
             # Predict quadrant
             quadrant = self.model.predict(features_scaled)[0]
             quadrant_map = {0: 'top_left', 1: 'top_right', 2: 'bottom_left', 3: 'bottom_right'}
-            print("Predicted Quadrant:", quadrant_map[quadrant])
 
-            # Draw rectangles around eyes
-            cv2.rectangle(frame, (left_rect[0], left_rect[1]),
-                        (left_rect[0] + left_rect[2], left_rect[1] + left_rect[3]), (0, 255, 0), 2)
-            cv2.rectangle(frame, (right_rect[0], right_rect[1]),
-                        (right_rect[0] + right_rect[2], right_rect[1] + right_rect[3]), (0, 255, 0), 2)
-
-            # Draw pupils
-            cv2.circle(frame, tuple(left_eye_center), 3, (255, 0, 0), -1)
-            cv2.circle(frame, tuple(right_eye_center), 3, (255, 0, 0), -1)
-
-            # Display the predicted quadrant
-            cv2.putText(frame, f"Quadrant: {quadrant_map[quadrant]}", (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
-
-            # Return the quadrant and the annotated frame
+            # Return the quadrant and the frame
             return quadrant_map[quadrant], frame
 
         # If no face is detected, return None
         return None, frame
+
 
 if __name__ == "__main__":
     # Initialize the predictor
@@ -107,6 +85,15 @@ if __name__ == "__main__":
     if not cap.isOpened():
         print("Error: Unable to access camera.")
         exit()
+
+    # Timing variables for tracking quadrant focus time
+    quadrant_start_time = None
+    current_quadrant = None
+    quadrant_times = {'top_left': 0, 'top_right': 0, 'bottom_left': 0, 'bottom_right': 0}
+
+    # Full screen window
+    cv2.namedWindow("Quadrant Prediction", cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty("Quadrant Prediction", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
     print("Press 'q' to quit.")
     while True:
@@ -123,7 +110,16 @@ if __name__ == "__main__":
 
         # Highlight the predicted quadrant with a green filled rectangle
         if quadrant is not None:
-            print(f"Predicted Quadrant: {quadrant}")
+            # Track time in the current quadrant
+            if quadrant != current_quadrant:
+                if current_quadrant is not None and quadrant_start_time is not None:
+                    elapsed_time = time.time() - quadrant_start_time
+                    quadrant_times[current_quadrant] += elapsed_time
+                    print(f"Time spent in {current_quadrant}: {elapsed_time:.2f} seconds")
+
+                # Update to the new quadrant
+                current_quadrant = quadrant
+                quadrant_start_time = time.time()
 
             # Define the quadrant areas
             top_left = (0, 0, frame_width // 2, frame_height // 2)
@@ -152,6 +148,17 @@ if __name__ == "__main__":
         if cv2.waitKey(1) & 0xFF == ord('q'):
             print("Exiting...")
             break
+
+    # Add the final time spent in the current quadrant
+    if current_quadrant is not None and quadrant_start_time is not None:
+        elapsed_time = time.time() - quadrant_start_time
+        quadrant_times[current_quadrant] += elapsed_time
+        print(f"Time spent in {current_quadrant}: {elapsed_time:.2f} seconds")
+
+    # Print total time spent in each quadrant
+    print("Total Time in Each Quadrant:")
+    for q, t in quadrant_times.items():
+        print(f"{q}: {t:.2f} seconds")
 
     # Release resources gracefully
     cap.release()
