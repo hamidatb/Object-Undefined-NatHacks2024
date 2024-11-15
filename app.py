@@ -11,14 +11,15 @@ import pandas as pd
 import pickle
 import os
 from utils.eye_tracking import EyeTracker
-from utils.mood_model import MoodModel
+from utils.sample_mood_model import MoodModel
 from dotenv import load_dotenv
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with your own secret key
+app.secret_key = os.getenv('SECRET_KEY')
 
 # Load environment variables
-load_dotenv()
 
 SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
 SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')

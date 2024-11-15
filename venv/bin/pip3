@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/Users/hami/Downloads/UAlberta Course/F24/EXTRACURRICULARS/NatHacks2024/Object-Undefined-NatHacks2024/venv/bin/python3.12" "$0" "$@"
+'''exec' "/Users/hami/Downloads/UAlberta Course/F24/EXTRACURRICULARS/NatHacks2024/Object-Undefined-NatHacks2024/venv/bin/python3.11" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re
