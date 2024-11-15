@@ -1,26 +1,30 @@
+# Apply eventlet monkey-patching FIRST
+import eventlet
+eventlet.monkey_patch()
+
+# Import other modules AFTER monkey-patching
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
-import cv2
-import dlib
+from flask_socketio import SocketIO, emit
 import threading
-import time
-import numpy as np
+import os
+import pickle
+import pandas as pd
+from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-import json
-import pandas as pd
-import pickle
-import os
 from utils.eye_tracking import EyeTracker
 from utils.sample_mood_model import MoodModel
-from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
-# Load environment variables
+# Initialize SocketIO with the app
+socketio = SocketIO(app, cors_allowed_origins="*")
 
+# Spotify API credentials
 SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
 SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
 SPOTIPY_REDIRECT_URI = os.getenv('SPOTIPY_REDIRECT_URI')
@@ -33,31 +37,35 @@ sp_oauth = SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
                         redirect_uri=SPOTIPY_REDIRECT_URI,
                         scope=SCOPE)
 
-# Load the pre-trained mood detection model
+# Load or regenerate the mood detection model
 model_path = os.path.join('models', 'mood_model.pkl')
-if not os.path.exists(model_path):
-    # Train and save a dummy model if it doesn't exist
-    from utils.mood_model import MoodModel
-    mood_model = MoodModel()
-    mood_model.train_dummy_model()
-else:
-    with open(model_path, 'rb') as f:
-        mood_model = pickle.load(f)
+def load_or_regenerate_model(regenerate=False):
+    if regenerate or not os.path.exists(model_path):
+        print("Training a new mood model...")
+        mood_model_obj = MoodModel()
+        mood_model_obj.train_dummy_model()
+        with open(model_path, 'rb') as f:
+            mood_model = pickle.load(f)
+        print("Model successfully trained and saved.")
+    else:
+        with open(model_path, 'rb') as f:
+            mood_model = pickle.load(f)
+        print("Loaded existing model.")
+    return mood_model
 
-# Initialize Eye Tracker
-eye_tracker = EyeTracker()
+# Load the model
+mood_model = load_or_regenerate_model(regenerate=True)
 
-# Global variables
-mood = None
-playlist = []
+# Initialize Eye Tracker with SocketIO
+eye_tracker = EyeTracker(socketio, camera_index=1)
 
+# Routes
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/start')
 def start_session():
-    # Start eye-tracking in a separate thread
     threading.Thread(target=eye_tracker.start_tracking).start()
     return redirect(url_for('detect_mood'))
 
@@ -65,14 +73,11 @@ def start_session():
 def detect_mood():
     global mood
     if request.method == 'POST':
-        # Toggle between Live Mode and Testing Mode
         mode = request.form.get('mode')
         session['mode'] = mode
         if mode == 'live':
-            # TODO: Integrate Muse S real-time data
-            pass
+            pass  # Live mode placeholder
         else:
-            # Load sample EEG data for Testing Mode
             sample_data = pd.read_csv(os.path.join('static', 'data', 'sample_eeg_data.csv'))
             mood = mood_model.predict(sample_data)[0]
         return redirect(url_for('show_mood'))
@@ -90,15 +95,11 @@ def show_playlist():
     global mood, playlist
     if not mood:
         return redirect(url_for('detect_mood'))
-    
-    # Authenticate Spotify
     token_info = sp_oauth.get_cached_token()
     if not token_info:
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
     sp = spotipy.Spotify(auth=token_info['access_token'])
-
-    # Get playlists based on mood
     results = sp.search(q=mood, type='playlist', limit=5)
     playlists = results['playlists']['items']
     if not playlists:
@@ -111,7 +112,8 @@ def show_playlist():
 
 @app.route('/play_song', methods=['POST'])
 def play_song():
-    uri = request.form['uri']
+    data = request.get_json()
+    uri = data.get('uri')
     token_info = sp_oauth.get_cached_token()
     if not token_info:
         return jsonify({'error': 'Unauthorized'}), 401
@@ -132,5 +134,13 @@ def thank_you():
     eye_tracker.stop_tracking()
     return render_template('thankyou.html')
 
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

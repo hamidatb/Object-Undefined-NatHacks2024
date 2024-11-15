@@ -37,3 +37,31 @@ window.onload = function() {
             });
     }
 };
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    var socket = io();
+
+    socket.on('connect', () => {
+        console.log('Connected to server');
+    });
+
+    socket.on('gaze', data => {
+        // data.x and data.y are normalized [0,1]
+        // Get window size
+        var windowWidth = window.innerWidth;
+        var windowHeight = window.innerHeight;
+
+        // Calculate actual position
+        var posX = data.x * windowWidth;
+        var posY = data.y * windowHeight;
+
+        // Update cursor-dot position
+        var cursorDot = document.getElementById('cursor-dot');
+        cursorDot.style.transform = `translate(${posX - 10}px, ${posY - 10}px)`; // Adjust for dot size
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+    });
+});

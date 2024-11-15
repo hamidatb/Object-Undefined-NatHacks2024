@@ -614,7 +614,8 @@ def test_functions_single_location():
             # else check if we got a function-like object
             elif (
                 inspect.isfunction(member) or
-                isinstance(member, (dispatched_function, np.ufunc))
+                isinstance(member, dispatched_function) or
+                isinstance(member, np.ufunc)
             ):
                 if member in visited_functions:
 

@@ -185,7 +185,6 @@ def fft(a, n=None, axis=-1, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.fft.fft(np.exp(2j * np.pi * np.arange(8) / 8))
     array([-2.33486982e-16+1.14423775e-17j,  8.00000000e+00-1.25557246e-15j,
             2.33486982e-16+2.33486982e-16j,  0.00000000e+00+1.22464680e-16j,
@@ -292,7 +291,6 @@ def ifft(a, n=None, axis=-1, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.fft.ifft([0, 4, 0, 0])
     array([ 1.+0.j,  0.+1.j, -1.+0.j,  0.-1.j]) # may vary
 
@@ -400,7 +398,6 @@ def rfft(a, n=None, axis=-1, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.fft.fft([0, 1, 0, 0])
     array([ 1.+0.j,  0.-1.j, -1.+0.j,  0.+1.j]) # may vary
     >>> np.fft.rfft([0, 1, 0, 0])
@@ -509,7 +506,6 @@ def irfft(a, n=None, axis=-1, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.fft.ifft([1, -1j, -1, 1j])
     array([0.+0.j,  1.+0.j,  0.+0.j,  0.+0.j]) # may vary
     >>> np.fft.irfft([1, -1j, -1])
@@ -605,7 +601,6 @@ def hfft(a, n=None, axis=-1, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> signal = np.array([1, 2, 3, 4, 3, 2])
     >>> np.fft.fft(signal)
     array([15.+0.j,  -4.+0.j,   0.+0.j,  -1.-0.j,   0.+0.j,  -4.+0.j]) # may vary
@@ -691,7 +686,6 @@ def ihfft(a, n=None, axis=-1, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> spectrum = np.array([ 15, -4, 0, -1, 0, -4])
     >>> np.fft.ifft(spectrum)
     array([1.+0.j,  2.+0.j,  3.+0.j,  4.+0.j,  3.+0.j,  2.+0.j]) # may vary
@@ -861,7 +855,6 @@ def fftn(a, s=None, axes=None, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> a = np.mgrid[:3, :3, :3][0]
     >>> np.fft.fftn(a, axes=(1, 2))
     array([[[ 0.+0.j,   0.+0.j,   0.+0.j], # may vary
@@ -1003,7 +996,6 @@ def ifftn(a, s=None, axes=None, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> a = np.eye(4)
     >>> np.fft.ifftn(np.fft.fftn(a, axes=(0,)), axes=(1,))
     array([[1.+0.j,  0.+0.j,  0.+0.j,  0.+0.j], # may vary
@@ -1135,7 +1127,6 @@ def fft2(a, s=None, axes=(-2, -1), norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> a = np.mgrid[:5, :5][0]
     >>> np.fft.fft2(a)
     array([[ 50.  +0.j        ,   0.  +0.j        ,   0.  +0.j        , # may vary
@@ -1265,7 +1256,6 @@ def ifft2(a, s=None, axes=(-2, -1), norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> a = 4 * np.eye(4)
     >>> np.fft.ifft2(a)
     array([[1.+0.j,  0.+0.j,  0.+0.j,  0.+0.j], # may vary
@@ -1383,7 +1373,6 @@ def rfftn(a, s=None, axes=None, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> a = np.ones((2, 2, 2))
     >>> np.fft.rfftn(a)
     array([[[8.+0.j,  0.+0.j], # may vary
@@ -1401,7 +1390,7 @@ def rfftn(a, s=None, axes=None, norm=None, out=None):
     a = asarray(a)
     s, axes = _cook_nd_args(a, s, axes)
     a = rfft(a, s[-1], axes[-1], norm, out=out)
-    for ii in range(len(axes)-2, -1, -1):
+    for ii in range(len(axes)-1):
         a = fft(a, s[ii], axes[ii], norm, out=out)
     return a
 
@@ -1476,7 +1465,6 @@ def rfft2(a, s=None, axes=(-2, -1), norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> a = np.mgrid[:5, :5][0]
     >>> np.fft.rfft2(a)
     array([[ 50.  +0.j        ,   0.  +0.j        ,   0.  +0.j        ],
@@ -1609,7 +1597,6 @@ def irfftn(a, s=None, axes=None, norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> a = np.zeros((3, 2, 2))
     >>> a[0, 0, 0] = 3 * 2 * 2
     >>> np.fft.irfftn(a)
@@ -1702,7 +1689,6 @@ def irfft2(a, s=None, axes=(-2, -1), norm=None, out=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> a = np.mgrid[:5, :5][0]
     >>> A = np.fft.rfft2(a)
     >>> np.fft.irfft2(A, s=a.shape)

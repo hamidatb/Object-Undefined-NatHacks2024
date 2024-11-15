@@ -52,7 +52,6 @@ def recursive_fill_fields(input, output):
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> a = np.array([(1, 10.), (2, 20.)], dtype=[('A', np.int64), ('B', np.float64)])
     >>> b = np.zeros((3,), dtype=a.dtype)
@@ -85,7 +84,6 @@ def _get_fieldspec(dtype):
 
     Examples
     --------
-    >>> import numpy as np
     >>> dt = np.dtype([(('a', 'A'), np.int64), ('b', np.double, 3)])
     >>> dt.descr
     [(('a', 'A'), '<i8'), ('b', '<f8', (3,))]
@@ -117,7 +115,6 @@ def get_names(adtype):
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> rfn.get_names(np.empty((1,), dtype=[('A', int)]).dtype)
     ('A',)
@@ -151,7 +148,6 @@ def get_names_flat(adtype):
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> rfn.get_names_flat(np.empty((1,), dtype=[('A', int)]).dtype) is None
     False
@@ -177,7 +173,6 @@ def flatten_descr(ndtype):
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> ndtype = np.dtype([('a', '<i4'), ('b', [('ba', '<f8'), ('bb', '<i4')])])
     >>> rfn.flatten_descr(ndtype)
@@ -245,7 +240,6 @@ def get_fieldstructure(adtype, lastname=None, parents=None,):
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> ndtype =  np.dtype([('A', int),
     ...                     ('B', [('BA', int),
@@ -386,7 +380,6 @@ def merge_arrays(seqarrays, fill_value=-1, flatten=False,
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> rfn.merge_arrays((np.array([1, 2]), np.array([10., 20., 30.])))
     array([( 1, 10.), ( 2, 20.), (-1, 30.)],
@@ -533,7 +526,6 @@ def drop_fields(base, drop_names, usemask=True, asrecarray=False):
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> a = np.array([(1, (2, 3.0)), (4, (5, 6.0))],
     ...   dtype=[('a', np.int64), ('b', [('ba', np.double), ('bb', np.int64)])])
@@ -629,7 +621,6 @@ def rename_fields(base, namemapper):
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> a = np.array([(1, (2, [3.0, 30.])), (4, (5, [6.0, 60.]))],
     ...   dtype=[('a', int),('b', [('ba', float), ('bb', (float, 2))])])
@@ -814,7 +805,6 @@ def repack_fields(a, align=False, recurse=False):
 
     Examples
     --------
-    >>> import numpy as np
 
     >>> from numpy.lib import recfunctions as rfn
     >>> def print_offsets(d):
@@ -985,7 +975,6 @@ def structured_to_unstructured(arr, dtype=None, copy=False, casting='unsafe'):
 
     Examples
     --------
-    >>> import numpy as np
 
     >>> from numpy.lib import recfunctions as rfn
     >>> a = np.zeros(4, dtype=[('a', 'i4'), ('b', 'f4,u2'), ('c', 'f4', 2)])
@@ -1121,7 +1110,6 @@ def unstructured_to_structured(arr, dtype=None, names=None, align=False,
 
     Examples
     --------
-    >>> import numpy as np
 
     >>> from numpy.lib import recfunctions as rfn
     >>> dt = np.dtype([('a', 'i4'), ('b', 'f4,u2'), ('c', 'f4', 2)])
@@ -1216,7 +1204,6 @@ def apply_along_fields(func, arr):
 
     Examples
     --------
-    >>> import numpy as np
 
     >>> from numpy.lib import recfunctions as rfn
     >>> b = np.array([(1, 2, 5), (4, 5, 7), (7, 8 ,11), (10, 11, 12)],
@@ -1307,7 +1294,6 @@ def require_fields(array, required_dtype):
 
     Examples
     --------
-    >>> import numpy as np
 
     >>> from numpy.lib import recfunctions as rfn
     >>> a = np.ones(4, dtype=[('a', 'i4'), ('b', 'f8'), ('c', 'u1')])
@@ -1352,7 +1338,6 @@ def stack_arrays(arrays, defaults=None, usemask=True, asrecarray=False,
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> x = np.array([1, 2,])
     >>> rfn.stack_arrays(x) is x
@@ -1442,7 +1427,6 @@ def find_duplicates(a, key=None, ignoremask=True, return_index=False):
 
     Examples
     --------
-    >>> import numpy as np
     >>> from numpy.lib import recfunctions as rfn
     >>> ndtype = [('a', int)]
     >>> a = np.ma.array([1, 1, 1, 2, 2, 3, 3],

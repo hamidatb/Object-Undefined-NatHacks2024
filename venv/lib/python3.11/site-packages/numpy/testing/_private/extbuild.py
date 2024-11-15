@@ -54,11 +54,7 @@ def build_and_import_extension(
     >>> assert mod.test_bytes(b'abc')
     """
     body = prologue + _make_methods(functions, modname)
-    init = """
-    PyObject *mod = PyModule_Create(&moduledef);
-    #ifdef Py_GIL_DISABLED
-    PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
-    #endif
+    init = """PyObject *mod = PyModule_Create(&moduledef);
            """
     if not build_dir:
         build_dir = pathlib.Path('.')

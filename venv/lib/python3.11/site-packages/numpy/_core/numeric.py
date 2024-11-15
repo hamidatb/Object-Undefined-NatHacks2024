@@ -18,7 +18,7 @@ from .multiarray import (
     fromstring, inner, lexsort, matmul, may_share_memory, min_scalar_type,
     ndarray, nditer, nested_iters, promote_types, putmask, result_type,
     shares_memory, vdot, where, zeros, normalize_axis_index,
-    _get_promotion_state, _set_promotion_state, vecdot
+    _get_promotion_state, _set_promotion_state
 )
 
 from . import overrides
@@ -52,8 +52,8 @@ __all__ = [
     'isclose', 'isscalar', 'binary_repr', 'base_repr', 'ones',
     'identity', 'allclose', 'putmask',
     'flatnonzero', 'inf', 'nan', 'False_', 'True_', 'bitwise_not',
-    'full', 'full_like', 'matmul', 'vecdot', 'shares_memory',
-    'may_share_memory', '_get_promotion_state', '_set_promotion_state']
+    'full', 'full_like', 'matmul', 'shares_memory', 'may_share_memory',
+    '_get_promotion_state', '_set_promotion_state']
 
 
 def _zeros_like_dispatcher(
@@ -115,7 +115,6 @@ def zeros_like(
 
     Examples
     --------
-    >>> import numpy as np
     >>> x = np.arange(6)
     >>> x = x.reshape((2, 3))
     >>> x
@@ -181,7 +180,6 @@ def ones(shape, dtype=None, order='C', *, device=None, like=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.ones(5)
     array([1., 1., 1., 1., 1.])
 
@@ -270,7 +268,6 @@ def ones_like(
 
     Examples
     --------
-    >>> import numpy as np
     >>> x = np.arange(6)
     >>> x = x.reshape((2, 3))
     >>> x
@@ -341,7 +338,6 @@ def full(shape, fill_value, dtype=None, order='C', *, device=None, like=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.full((2, 2), np.inf)
     array([[inf, inf],
            [inf, inf]])
@@ -429,7 +425,6 @@ def full_like(
 
     Examples
     --------
-    >>> import numpy as np
     >>> x = np.arange(6, dtype=int)
     >>> np.full_like(x, 1)
     array([1, 1, 1, 1, 1, 1])
@@ -508,7 +503,6 @@ def count_nonzero(a, axis=None, *, keepdims=False):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.count_nonzero(np.eye(4))
     4
     >>> a = np.array([[0, 1, 7, 0],
@@ -563,7 +557,6 @@ def isfortran(a):
     order (last index varies the fastest), or FORTRAN-contiguous order in
     memory (first index varies the fastest).
 
-    >>> import numpy as np
     >>> a = np.array([[1, 2, 3], [4, 5, 6]], order='C')
     >>> a
     array([[1, 2, 3],
@@ -639,7 +632,6 @@ def argwhere(a):
 
     Examples
     --------
-    >>> import numpy as np
     >>> x = np.arange(6).reshape(2,3)
     >>> x
     array([[0, 1, 2],
@@ -688,7 +680,6 @@ def flatnonzero(a):
 
     Examples
     --------
-    >>> import numpy as np
     >>> x = np.arange(-2, 3)
     >>> x
     array([-2, -1,  0,  1,  2])
@@ -761,7 +752,6 @@ def correlate(a, v, mode='valid'):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.correlate([1, 2, 3], [0, 1, 0.5])
     array([3.5])
     >>> np.correlate([1, 2, 3], [0, 1, 0.5], "same")
@@ -861,7 +851,6 @@ def convolve(a, v, mode='full'):
     Note how the convolution operator flips the second array
     before "sliding" the two across one another:
 
-    >>> import numpy as np
     >>> np.convolve([1, 2, 3], [0, 1, 0.5])
     array([0. , 1. , 2.5, 4. , 1.5])
 
@@ -946,7 +935,6 @@ def outer(a, b, out=None):
     --------
     Make a (*very* coarse) grid for computing a Mandelbrot set:
 
-    >>> import numpy as np
     >>> rl = np.outer(np.ones((5,)), np.linspace(-2, 2, 5))
     >>> rl
     array([[-2., -1.,  0.,  1.,  2.],
@@ -1045,7 +1033,6 @@ def tensordot(a, b, axes=2):
     --------
     A "traditional" example:
 
-    >>> import numpy as np
     >>> a = np.arange(60.).reshape(3,4,5)
     >>> b = np.arange(24.).reshape(4,3,2)
     >>> c = np.tensordot(a,b, axes=([1,0],[0,1]))
@@ -1223,7 +1210,6 @@ def roll(a, shift, axis=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> x = np.arange(10)
     >>> np.roll(x, 2)
     array([8, 9, 0, 1, 2, 3, 4, 5, 6, 7])
@@ -1272,7 +1258,7 @@ def roll(a, shift, axis=None):
                 "'shift' and 'axis' should be scalars or 1D sequences")
         shifts = {ax: 0 for ax in range(a.ndim)}
         for sh, ax in broadcasted:
-            shifts[ax] += int(sh)
+            shifts[ax] += sh
 
         rolls = [((slice(None), slice(None)),)] * a.ndim
         for ax, offset in shifts.items():
@@ -1357,7 +1343,6 @@ def rollaxis(a, axis, start=0):
 
     Examples
     --------
-    >>> import numpy as np
     >>> a = np.ones((3,4,5,6))
     >>> np.rollaxis(a, 3, 1).shape
     (3, 6, 4, 5)
@@ -1480,7 +1465,6 @@ def moveaxis(a, source, destination):
 
     Examples
     --------
-    >>> import numpy as np
     >>> x = np.zeros((3, 4, 5))
     >>> np.moveaxis(x, 0, -1).shape
     (4, 5, 3)
@@ -1591,7 +1575,6 @@ def cross(a, b, axisa=-1, axisb=-1, axisc=-1, axis=None):
     --------
     Vector cross-product.
 
-    >>> import numpy as np
     >>> x = [1, 2, 3]
     >>> y = [4, 5, 6]
     >>> np.cross(x, y)
@@ -1799,7 +1782,6 @@ def indices(dimensions, dtype=int, sparse=False):
 
     Examples
     --------
-    >>> import numpy as np
     >>> grid = np.indices((2, 3))
     >>> grid.shape
     (2, 2, 3)
@@ -1899,7 +1881,6 @@ def fromfunction(function, shape, *, dtype=float, like=None, **kwargs):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.fromfunction(lambda i, j: i, (2, 2), dtype=float)
     array([[0., 0.],
            [1., 1.]])
@@ -1989,20 +1970,14 @@ def isscalar(element):
 
     Examples
     --------
-    >>> import numpy as np
-
     >>> np.isscalar(3.1)
     True
-
     >>> np.isscalar(np.array(3.1))
     False
-
     >>> np.isscalar([3.1])
     False
-
     >>> np.isscalar(False)
     True
-
     >>> np.isscalar('numpy')
     True
 
@@ -2070,7 +2045,6 @@ def binary_repr(num, width=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.binary_repr(3)
     '11'
     >>> np.binary_repr(-3)
@@ -2155,7 +2129,6 @@ def base_repr(number, base=2, padding=0):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.base_repr(5)
     '101'
     >>> np.base_repr(6, 5)
@@ -2229,7 +2202,6 @@ def identity(n, dtype=None, *, like=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.identity(3)
     array([[1.,  0.,  0.],
            [0.,  1.,  0.],
@@ -2320,22 +2292,16 @@ def allclose(a, b, rtol=1.e-5, atol=1.e-8, equal_nan=False):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.allclose([1e10,1e-7], [1.00001e10,1e-8])
     False
-
     >>> np.allclose([1e10,1e-8], [1.00001e10,1e-9])
     True
-
     >>> np.allclose([1e10,1e-8], [1.0001e10,1e-9])
     False
-
     >>> np.allclose([1.0, np.nan], [1.0, np.nan])
     False
-
     >>> np.allclose([1.0, np.nan], [1.0, np.nan], equal_nan=True)
     True
-
 
     """
     res = all(isclose(a, b, rtol=rtol, atol=atol, equal_nan=equal_nan))
@@ -2410,34 +2376,24 @@ def isclose(a, b, rtol=1.e-5, atol=1.e-8, equal_nan=False):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.isclose([1e10,1e-7], [1.00001e10,1e-8])
     array([ True, False])
-
     >>> np.isclose([1e10,1e-8], [1.00001e10,1e-9])
     array([ True, True])
-
     >>> np.isclose([1e10,1e-8], [1.0001e10,1e-9])
     array([False,  True])
-
     >>> np.isclose([1.0, np.nan], [1.0, np.nan])
     array([ True, False])
-
     >>> np.isclose([1.0, np.nan], [1.0, np.nan], equal_nan=True)
     array([ True, True])
-
     >>> np.isclose([1e-8, 1e-7], [0.0, 0.0])
     array([ True, False])
-
     >>> np.isclose([1e-100, 1e-7], [0.0, 0.0], atol=0.0)
     array([False, False])
-
     >>> np.isclose([1e-10, 1e-10], [1e-20, 0.0])
     array([ True,  True])
-
     >>> np.isclose([1e-10, 1e-10], [1e-20, 0.999999e-10], atol=0.0)
     array([False,  True])
-
     """
     # Turn all but python scalars into arrays.
     x, y, atol, rtol = (
@@ -2516,24 +2472,17 @@ def array_equal(a1, a2, equal_nan=False):
 
     Examples
     --------
-    >>> import numpy as np
-
     >>> np.array_equal([1, 2], [1, 2])
     True
-
     >>> np.array_equal(np.array([1, 2]), np.array([1, 2]))
     True
-
     >>> np.array_equal([1, 2], [1, 2, 3])
     False
-
     >>> np.array_equal([1, 2], [1, 4])
     False
-
     >>> a = np.array([1, np.nan])
     >>> np.array_equal(a, a)
     False
-
     >>> np.array_equal(a, a, equal_nan=True)
     True
 
@@ -2598,7 +2547,6 @@ def array_equiv(a1, a2):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.array_equiv([1, 2], [1, 2])
     True
     >>> np.array_equiv([1, 2], [1, 3])
@@ -2627,12 +2575,12 @@ def array_equiv(a1, a2):
     return builtins.bool(asanyarray(a1 == a2).all())
 
 
-def _astype_dispatcher(x, dtype, /, *, copy=None, device=None):
+def _astype_dispatcher(x, dtype, /, *, copy=None):
     return (x, dtype)
 
 
 @array_function_dispatch(_astype_dispatcher)
-def astype(x, dtype, /, *, copy=True, device=None):
+def astype(x, dtype, /, *, copy = True):
     """
     Copies an array to a specified data type.
 
@@ -2653,11 +2601,6 @@ def astype(x, dtype, /, *, copy=True, device=None):
         matches the data type of the input array, the input array must be
         returned; otherwise, a newly allocated array must be returned.
         Defaults to ``True``.
-    device : str, optional
-        The device on which to place the returned array. Default: None.
-        For Array-API interoperability only, so must be ``"cpu"`` if passed.
-
-        .. versionadded:: 2.1.0
 
     Returns
     -------
@@ -2670,7 +2613,6 @@ def astype(x, dtype, /, *, copy=True, device=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> arr = np.array([1, 2, 3]); arr
     array([1, 2, 3])
     >>> np.astype(arr, np.float64)
@@ -2684,15 +2626,9 @@ def astype(x, dtype, /, *, copy=True, device=None):
     True
 
     """
-    if not (isinstance(x, np.ndarray) or isscalar(x)):
+    if not isinstance(x, np.ndarray):
         raise TypeError(
-            "Input should be a NumPy array or scalar. "
-            f"It is a {type(x)} instead."
-        )
-    if device is not None and device != "cpu":
-        raise ValueError(
-            'Device not understood. Only "cpu" is allowed, but received:'
-            f' {device}'
+            f"Input should be a NumPy array. It is a {type(x)} instead."
         )
     return x.astype(dtype, copy=copy)
 

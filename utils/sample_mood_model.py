@@ -5,12 +5,19 @@ import pickle
 from sklearn.dummy import DummyClassifier
 import pandas as pd
 import os
+import os
+import pickle
 
 class MoodModel:
     def __init__(self):
+        from sklearn.dummy import DummyClassifier
         self.model = DummyClassifier(strategy="most_frequent")
     
     def train_dummy_model(self):
+        # Ensure the models directory exists
+        os.makedirs('models', exist_ok=True)
+        
+        # Dummy training data
         X = pd.DataFrame({
             'eeg1': [0.5, 0.6, 0.55],
             'eeg2': [0.6, 0.65, 0.6],
@@ -24,9 +31,11 @@ class MoodModel:
             'eeg10': [0.6, 0.65, 0.62]
         })
         y = ['happy', 'happy', 'happy']
+
+        # Fit the dummy model
         self.model.fit(X, y)
-        with open(os.path.join('models', 'mood_model.pkl'), 'wb') as f:
+        
+        # Save the trained model
+        model_path = os.path.join('models', 'mood_model.pkl')
+        with open(model_path, 'wb') as f:
             pickle.dump(self.model, f)
-    
-    def predict(self, data):
-        return self.model.predict(data)

@@ -17,7 +17,6 @@ from unittest.case import SkipTest
 from warnings import WarningMessage
 import pprint
 import sysconfig
-import concurrent.futures
 
 import numpy as np
 from numpy._core import (
@@ -40,8 +39,7 @@ __all__ = [
         'SkipTest', 'KnownFailureException', 'temppath', 'tempdir', 'IS_PYPY',
         'HAS_REFCOUNT', "IS_WASM", 'suppress_warnings', 'assert_array_compare',
         'assert_no_gc_cycles', 'break_cycles', 'HAS_LAPACK64', 'IS_PYSTON',
-        '_OLD_PROMOTION', 'IS_MUSL', 'check_support_sve', 'NOGIL_BUILD',
-        'IS_EDITABLE', 'run_threaded',
+        '_OLD_PROMOTION', 'IS_MUSL', '_SUPPORTS_SVE'
         ]
 
 
@@ -56,7 +54,6 @@ verbose = 0
 IS_WASM = platform.machine() in ["wasm32", "wasm64"]
 IS_PYPY = sys.implementation.name == 'pypy'
 IS_PYSTON = hasattr(sys, "pyston_version_info")
-IS_EDITABLE = not bool(np.__path__) or 'editable' in np.__path__[0]
 HAS_REFCOUNT = getattr(sys, 'getrefcount', None) is not None and not IS_PYSTON
 HAS_LAPACK64 = numpy.linalg._umath_linalg._ilp64
 
@@ -71,7 +68,6 @@ _v = sysconfig.get_config_var('HOST_GNU_TYPE') or ''
 if 'musl' in _v:
     IS_MUSL = True
 
-NOGIL_BUILD = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 
 def assert_(val, msg=''):
     """
@@ -1380,24 +1376,21 @@ def rundocs(filename=None, raise_on_error=True):
         raise AssertionError("Some doctests failed:\n%s" % "\n".join(msg))
 
 
-def check_support_sve(__cache=[]):
+def check_support_sve():
     """
     gh-22982
     """
-    
-    if __cache:
-        return __cache[0]
     
     import subprocess
     cmd = 'lscpu'
     try:
         output = subprocess.run(cmd, capture_output=True, text=True)
-        result = 'sve' in output.stdout
-    except (OSError, subprocess.SubprocessError):
-        result = False
-    __cache.append(result)
-    return __cache[0]
+        return 'sve' in output.stdout
+    except OSError:
+        return False
 
+
+_SUPPORTS_SVE = check_support_sve()
 
 #
 # assert_raises and assert_raises_regex are taken from unittest.
@@ -2701,14 +2694,3 @@ def _get_glibc_version():
 
 _glibcver = _get_glibc_version()
 _glibc_older_than = lambda x: (_glibcver != '0.0' and _glibcver < x)
-
-
-def run_threaded(func, iters, pass_count=False):
-    """Runs a function many times in parallel"""
-    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as tpe:
-        if pass_count:
-            futures = [tpe.submit(func, i) for i in range(iters)]
-        else:
-            futures = [tpe.submit(func) for _ in range(iters)]
-        for f in futures:
-            f.result()

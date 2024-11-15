@@ -7,7 +7,7 @@ import time
 import pytest
 
 import numpy as np
-from numpy.testing import assert_array_equal, IS_WASM, IS_EDITABLE
+from numpy.testing import assert_array_equal, IS_WASM
 
 # This import is copied from random.tests.test_extending
 try:
@@ -25,13 +25,6 @@ else:
         cython = None
 
 pytestmark = pytest.mark.skipif(cython is None, reason="requires cython")
-
-
-if IS_EDITABLE:
-    pytest.skip(
-        "Editable install doesn't support tests with a compile step",
-        allow_module_level=True
-    )
 
 
 @pytest.fixture(scope='module')

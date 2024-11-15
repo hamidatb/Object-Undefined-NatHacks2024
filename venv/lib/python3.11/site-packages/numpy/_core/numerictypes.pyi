@@ -45,14 +45,14 @@ _SCT = TypeVar("_SCT", bound=generic)
 
 class _TypeCodes(TypedDict):
     Character: L['c']
-    Integer: L['bhilqnp']
-    UnsignedInteger: L['BHILQNP']
+    Integer: L['bhilqp']
+    UnsignedInteger: L['BHILQP']
     Float: L['efdg']
     Complex: L['FDG']
-    AllInteger: L['bBhHiIlLqQnNpP']
+    AllInteger: L['bBhHiIlLqQpP']
     AllFloat: L['efdgFDG']
     Datetime: L['Mm']
-    All: L['?bhilqnpBHILQNPefdgFDGSUVOMm']
+    All: L['?bhilqpBHILQPefdgFDGSUVOMm']
 
 __all__: list[str]
 

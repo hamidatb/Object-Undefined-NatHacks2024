@@ -4,9 +4,32 @@
     <meta charset="UTF-8">
     <title>NeuroTune</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Include Socket.IO client library -->
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+            integrity="sha384-fYBtwvQJxkKz+IObE6cNNGFGQBrdCeAA70iP6FqZjIk4tY5ZkmqGxUsXb6kVvZ65"
+            crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <style>
+        /* Add styles for the cursor dot */
+        #cursor-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            transition: transform 0.1s ease;
+        }
+        body {
+            position: relative;
+        }
+    </style>
 </head>
 <body>
+    <!-- Cursor Dot -->
+    <div id="cursor-dot"></div>
+    
     {% block content %}{% endblock %}
 </body>
 </html>

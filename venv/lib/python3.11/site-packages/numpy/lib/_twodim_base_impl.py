@@ -79,7 +79,6 @@ def fliplr(m):
 
     Examples
     --------
-    >>> import numpy as np
     >>> A = np.diag([1.,2.,3.])
     >>> A
     array([[1.,  0.,  0.],
@@ -90,8 +89,7 @@ def fliplr(m):
            [0.,  2.,  0.],
            [3.,  0.,  0.]])
 
-    >>> rng = np.random.default_rng()
-    >>> A = rng.normal(size=(2,3,5))
+    >>> A = np.random.randn(2,3,5)
     >>> np.all(np.fliplr(A) == A[:,::-1,...])
     True
 
@@ -134,7 +132,6 @@ def flipud(m):
 
     Examples
     --------
-    >>> import numpy as np
     >>> A = np.diag([1.0, 2, 3])
     >>> A
     array([[1.,  0.,  0.],
@@ -145,8 +142,7 @@ def flipud(m):
            [0.,  2.,  0.],
            [1.,  0.,  0.]])
 
-    >>> rng = np.random.default_rng()
-    >>> A = rng.normal(size=(2,3,5))
+    >>> A = np.random.randn(2,3,5)
     >>> np.all(np.flipud(A) == A[::-1,...])
     True
 
@@ -205,7 +201,6 @@ def eye(N, M=None, k=0, dtype=float, order='C', *, device=None, like=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.eye(2, dtype=int)
     array([[1, 0],
            [0, 1]])
@@ -280,7 +275,6 @@ def diag(v, k=0):
 
     Examples
     --------
-    >>> import numpy as np
     >>> x = np.arange(9).reshape((3,3))
     >>> x
     array([[0, 1, 2],
@@ -345,7 +339,6 @@ def diagflat(v, k=0):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.diagflat([[1,2], [3,4]])
     array([[1, 0, 0, 0],
            [0, 2, 0, 0],
@@ -406,7 +399,6 @@ def tri(N, M=None, k=0, dtype=float, *, like=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.tri(3, 5, 2, dtype=int)
     array([[1, 1, 1, 0, 0],
            [1, 1, 1, 1, 0],
@@ -468,7 +460,6 @@ def tril(m, k=0):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.tril([[1,2,3],[4,5,6],[7,8,9],[10,11,12]], -1)
     array([[ 0,  0,  0],
            [ 4,  0,  0],
@@ -513,7 +504,6 @@ def triu(m, k=0):
 
     Examples
     --------
-    >>> import numpy as np
     >>> np.triu([[1,2,3],[4,5,6],[7,8,9],[10,11,12]], -1)
     array([[ 1,  2,  3],
            [ 4,  5,  6],
@@ -584,7 +574,6 @@ def vander(x, N=None, increasing=False):
 
     Examples
     --------
-    >>> import numpy as np
     >>> x = np.array([1, 2, 3, 5])
     >>> N = 3
     >>> np.vander(x, N)
@@ -727,7 +716,6 @@ def histogram2d(x, y, bins=10, range=None, density=None, weights=None):
 
     Examples
     --------
-    >>> import numpy as np
     >>> from matplotlib.image import NonUniformImage
     >>> import matplotlib.pyplot as plt
 
@@ -866,8 +854,6 @@ def mask_indices(n, mask_func, k=0):
 
     Examples
     --------
-    >>> import numpy as np
-
     These are the indices that would allow you to access the upper triangular
     part of any 3x3 array:
 
@@ -937,8 +923,6 @@ def tril_indices(n, k=0, m=None):
 
     Examples
     --------
-    >>> import numpy as np
-
     Compute two different sets of indices to access 4x4 arrays, one for the
     lower triangular part starting at the main diagonal, and one starting two
     diagonals further right:
@@ -1006,9 +990,8 @@ def tril_indices_from(arr, k=0):
 
     Examples
     --------
-    >>> import numpy as np
 
-    Create a 4 by 4 array
+    Create a 4 by 4 array.
 
     >>> a = np.arange(16).reshape(4, 4)
     >>> a
@@ -1091,8 +1074,6 @@ def triu_indices(n, k=0, m=None):
 
     Examples
     --------
-    >>> import numpy as np
-
     Compute two different sets of indices to access 4x4 arrays, one for the
     upper triangular part starting at the main diagonal, and one starting two
     diagonals further right:
@@ -1161,9 +1142,8 @@ def triu_indices_from(arr, k=0):
 
     Examples
     --------
-    >>> import numpy as np
 
-    Create a 4 by 4 array
+    Create a 4 by 4 array.
 
     >>> a = np.arange(16).reshape(4, 4)
     >>> a

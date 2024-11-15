@@ -1,13 +1,11 @@
+import sys
 from collections.abc import Callable, Sequence
-from typing import (
-    TypeVar,
-    Any,
-    overload,
-    SupportsIndex,
-    Protocol,
-    ParamSpec,
-    Concatenate,
-)
+from typing import TypeVar, Any, overload, SupportsIndex, Protocol
+
+if sys.version_info >= (3, 10):
+    from typing import ParamSpec, Concatenate
+else:
+    from typing_extensions import ParamSpec, Concatenate
 
 import numpy as np
 from numpy import (

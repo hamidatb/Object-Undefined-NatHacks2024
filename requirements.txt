@@ -12,3 +12,6 @@ pickle
 os
 dotenv
 imutils
+Flask-SocketIO
+keras
+tensorflow
