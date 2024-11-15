@@ -94,7 +94,7 @@ def map_quadrant_to_screen(quadrant):
 def tracking_function():
     global tracking_active
     tracking_active = True
-    cap = cv2.VideoCapture(0)  # Change to 1 if your camera is on index 1
+    cap = cv2.VideoCapture(1)  # Change to 1 if your camera is on index 1
     if not cap.isOpened():
         print("Error: Unable to access camera.")
         tracking_active = False
