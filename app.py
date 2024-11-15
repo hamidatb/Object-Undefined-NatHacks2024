@@ -1,5 +1,3 @@
-# app.py
-
 # Apply eventlet monkey-patching FIRST
 import eventlet
 import signal
@@ -20,7 +18,6 @@ from spotipy.oauth2 import SpotifyOAuth
 from utils.predict_quadrant import QuadrantPredictor
 from utils.sample_mood_model import MoodModel
 import cv2
-
 import time
 
 # Load environment variables
@@ -235,7 +232,7 @@ def graceful_exit(signum, frame):
         print("Stopping tracking...")
         tracking_active = False
         if tracking_thread and tracking_thread.is_alive():
-            tracking_thread.join()  # Wait for the tracking thread to end
+            tracking_thread.join(timeout=2)  # Set timeout to 2 seconds
 
     # Stop the Flask-SocketIO server
     socketio.stop()

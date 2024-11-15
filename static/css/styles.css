@@ -53,16 +53,15 @@ button:hover {
 
 /* Cursor Dot Styling */
 #cursor-dot {
-    position: absolute;
-    width: 40px;
-    height: 40px;
+    position: fixed;
+    width: 100px;
+    height: 100px;
     background-color: #00FF00; /* Bright green */
     border-radius: 50%;
     pointer-events: none;
     z-index: 1000;
-    transition: transform 0.5s ease; /* Smooth transitions */
+    transition: transform 0.7s ease; /* Smooth transitions */
 }
-
 
 
 /* Quadrant Info Styling */
@@ -79,31 +78,53 @@ button:hover {
     z-index: 1001;
 }
 
-/* Vignette Effect */
-#vignette-overlay {
-    position: absolute;
+
+/* Quadrant Buttons Styling */
+#quadrant-buttons {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none;
-    z-index: 900;
-    background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
-    transition: background 0.3s ease;
+    pointer-events: none; /* Allows gaze cursor to interact without blocking */
 }
 
-.vignette-top_left {
-    background: radial-gradient(circle at 20% 20%, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
+.quadrant-button {
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    background-color: #342E1B;
+    color: #FFE695;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    pointer-events: auto; /* Re-enable pointer events for buttons */
 }
 
-.vignette-top_right {
-    background: radial-gradient(circle at 80% 20%, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
+#button-top-left {
+    top: 20%;
+    left: 20%;
 }
 
-.vignette-bottom_left {
-    background: radial-gradient(circle at 20% 80%, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
+#button-top-right {
+    top: 20%;
+    right: 20%;
 }
 
-.vignette-bottom_right {
-    background: radial-gradient(circle at 80% 80%, transparent 60%, rgba(0, 0, 0, 0.2) 90%);
+#button-bottom-left {
+    bottom: 20%;
+    left: 20%;
+}
+
+#button-bottom-right {
+    bottom: 20%;
+    right: 20%;
+}
+
+/* Ensure buttons are accessible */
+.quadrant-button:hover {
+    background-color: #57472F;
+    transform: scale(1.05);
+    transition: 0.3s ease;
 }

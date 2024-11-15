@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeuroTune</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+   <!-- Load the socket.io client library -->
+   <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+   <!-- Load your custom script -->
+   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 <body>
     <!-- Quadrant Info Display -->
@@ -14,6 +16,14 @@
 
     <!-- Cursor Dot -->
     <div id="cursor-dot"></div>
+
+    <!-- Quadrant Buttons -->
+    <div id="quadrant-buttons">
+        <button id="button-top-left" class="quadrant-button">Top Left Button</button>
+        <button id="button-top-right" class="quadrant-button">Top Right Button</button>
+        <button id="button-bottom-left" class="quadrant-button">Bottom Left Button</button>
+        <button id="button-bottom-right" class="quadrant-button">Bottom Right Button</button>
+    </div>
 
     <!-- Main Content -->
     <div class="container">
