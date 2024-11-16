@@ -1,10 +1,13 @@
+/* Import the font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
 /* General Styling */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Rubik', sans-serif;
     background-color: #FFE695; /* Soft yellow */
-    color: #342E1B; /* Dark brown for text */
+    color: #e7d497; /* Dark brown for text */
     position: relative;
     overflow: hidden;
 }
@@ -16,7 +19,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    min-height: 100vh;
+    min-height: 80vh;
     padding: 0px;
     box-sizing: border-box;
 }
@@ -54,13 +57,55 @@ button:hover {
     position: fixed;
     width: 100px;
     height: 100px;
-    background-color: #00FF00; /* Bright green */
+    background-color: #7d5b3a; /* Bright green */
     border-radius: 50%;
     pointer-events: none;
     z-index: 1000;
     transition: transform 0.7s ease; /* Smooth transitions */
 }
 
+
+/* Album Section */
+.album-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.album-cover {
+    width: 520px;
+    height: 520px;
+    border-radius: 20px;
+    box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.1);
+}
+
+.song-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.song-title {
+    font-size: 3rem;
+    font-weight: lighter;
+    margin: 10px 0;
+    color: #42350b;
+}
+
+/* Center the custom audio player */
+.custom-audio-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+}
 
 /* Quadrant Info Styling */
 #quadrant-info {
@@ -77,19 +122,40 @@ button:hover {
 }
 
 
-/* Quadrant Buttons Styling */
-.quadrant-button {
-    position: absolute;
-    width: 200px;
-    height: 100px;
+button {
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-family: 'Roboto', sans-serif; /* Minimalistic and clean font */
+    font-weight: bold;                /* Bold style */
     background-color: #342E1B;
     color: #FFE695;
     border: none;
     border-radius: 8px;
-    font-size: 1.5rem;
     cursor: pointer;
-    pointer-events: auto; /* Re-enable pointer events for buttons */
-    transition: transform 0.3s ease, background-color 0.3s ease; /* Add transitions */
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #57472F;
+    transform: scale(1.05);
+    transition: 0.3s ease;
+}
+
+/* Quadrant Buttons Styling */
+.quadrant-button {
+    position: fixed;
+    width: 150px;
+    height: 150px;
+    font-family: 'Roboto', sans-serif; /* Minimalistic and clean font */
+    font-weight: lighter;                 /* Bold style */
+    background-color: #342E1B;
+    color: #FFE695;
+    border: none;
+    border-radius: 0; /* Reset default border-radius */
+    font-size: 2rem;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .quadrant-button:hover {
@@ -103,23 +169,36 @@ button:hover {
 }
 
 #button-top-left {
-    top: 20%;
-    left: 20%;
+    top: 3%;
+    left: 3%;
+    border-radius: 100px;
+    height: 400px;
+    width: 500px;
 }
 
 #button-top-right {
-    top: 20%;
-    right: 20%;
+    top: 3%;
+    right: 3%;
+    border-radius: 100px;
+    height: 400px;
+    width: 500px;
 }
 
 #button-bottom-left {
     bottom: 20%;
-    left: 20%;
+    left: 3%;
+    border-radius: 100px;
+    height: 400px;
+    width: 500px;
 }
 
 #button-bottom-right {
     bottom: 20%;
-    right: 20%;
+    right: 3%;
+    border-radius: 100px;
+    height: 400px;
+    width: 500px;
+    font-size: 6rem;
 }
 
 /* Ensure buttons are accessible */

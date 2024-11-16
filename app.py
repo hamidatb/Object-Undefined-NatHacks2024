@@ -24,6 +24,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
+app.config['WTF_CSRF_ENABLED'] = False
 
 # Initialize SocketIO with the app
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -84,55 +85,60 @@ test_playlists = {
     'Happy': [
         {
             'name': 'Happy - Pharrell Williams',
-            'file_path': 'static/music/happy_pharrell.mp3',
-            'image_url': 'static/images/happy_pharrell.jpg'
+            'file_path': 'music/happy_pharrell.mp3',
+            'image_url': 'images/happy_pharrell.jpg'
         },
         {
             'name': 'Can’t Stop the Feeling - Justin Timberlake',
-            'file_path': 'static/music/cant_stop_feeling.mp3',
-            'image_url': 'static/images/cant_stop_feeling.jpeg'
+            'file_path': 'music/cant_stop_feeling.mp3',
+            'image_url': 'images/cant_stop_feeling.jpg'
         },
         {
             'name': 'I Gotta Feeling - Black Eyed Peas',
-            'file_path': 'static/music/i_gotta_feeling.mp3',
-            'image_url': 'static/images/i_gotta_feeling.png'
+            'file_path': 'music/i_gotta_feeling.mp3',
+            'image_url': 'images/i_gotta_feeling.jpg'
         },
     ],
     'Sad': [
         {
             'name': 'Someone Like You - Adele',
-            'file_path': 'static/music/someone_like_you.mp3',
-            'image_url': 'static/images/someone_like_you.png'
+            'file_path': 'music/someone_like_you.mp3',
+            'image_url': 'images/someone_like_you.jpg'
         },
         {
             'name': 'Fix You - Coldplay',
-            'file_path': 'static/music/fix_you.mp3',
-            'image_url': 'static/images/fix_you.jpg'
+            'file_path': 'music/fix_you.mp3',
+            'image_url': 'images/fix_you.jpg'
         },
         {
             'name': 'Let Her Go - Passenger',
-            'file_path': 'static/music/let_her_go.mp3',
-            'image_url': 'static/images/let_her_go.jpg'
+            'file_path': 'music/let_her_go.mp3',
+            'image_url': 'images/let_her_go.jpg'
         },
     ],
     'Angry': [
         {
             'name': 'Break Stuff - Limp Bizkit',
-            'file_path': 'static/music/break_stuff.mp3',
-            'image_url': 'static/images/break_stuff.jpeg'
+            'file_path': 'music/break_stuff.mp3',
+            'image_url': 'images/break_stuff.jpg'
         },
         {
             'name': 'Get Out My Way - Tedashii feat. Lecrae',
-            'file_path': 'static/music/out_my_way.mp3',
-            'image_url': 'static/images/out_my_way.jpeg'
+            'file_path': 'music/out_my_way.mp3',
+            'image_url': 'images/out_my_way.jpg'
         },
         {
             'name': 'Elevate - DJ Khalil',
-            'file_path': 'static/music/elevate.mp3',
-            'image_url': 'static/images/elevate.jpeg'
+            'file_path': 'music/elevate.mp3',
+            'image_url': 'images/elevate.jpg'
         },
     ],
 }
+
+@app.route('/clear_session')
+def clear_session():
+    session.clear()
+    return "Session cleared!", 200
 
 # Function to map quadrants to screen coordinates
 def map_quadrant_to_screen(quadrant):
@@ -171,7 +177,7 @@ def tracking_function():
             screen_x, screen_y = map_quadrant_to_screen(quadrant)
             # Emit gaze coordinates via SocketIO
             socketio.emit('gaze', {'x': screen_x, 'y': screen_y, 'quadrant': quadrant})
-            print(f"Gaze Emitted: Quadrant={quadrant}, ScreenX={screen_x}, ScreenY={screen_y}")
+            # print(f"Gaze Emitted: Quadrant={quadrant}, ScreenX={screen_x}, ScreenY={screen_y}")
 
         # Optional: Sleep to reduce CPU usage
         time.sleep(0.02)  # Approximately 50 FPS]
@@ -227,18 +233,28 @@ def show_playlist():
     if not mood:
         return redirect(url_for('detect_mood'))
 
-    # Initialize playlist and current song index in session
+    # Fetch playlist based on mood and initialize in session if not already set
     if 'playlist' not in session:
-        session['playlist'] = test_playlists.get(mood.capitalize(), [])
+        playlist = test_playlists.get(mood.capitalize(), [])
+        session['playlist'] = playlist
         session['current_song_index'] = 0
+    else:
+        playlist = session['playlist']
 
-    playlist = session['playlist']
     current_song_index = session['current_song_index']
 
-    if current_song_index >= len(playlist):
+    # Check if playlist is empty or we reached the end
+    if not playlist or current_song_index >= len(playlist):
         return redirect(url_for('thank_you'))
 
     current_song = playlist[current_song_index]
+
+    # Debugging: Print the structure of the current song
+    print(f"Serving Playlist: {current_song}")
+
+    # Ensure current_song has the correct keys
+    if not all(key in current_song for key in ['name', 'file_path', 'image_url']):
+        return f"Error: Invalid song structure: {current_song}", 500
 
     return render_template('playlist.html', song=current_song, mood=mood.capitalize())
 

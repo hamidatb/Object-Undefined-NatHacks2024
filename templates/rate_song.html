@@ -14,7 +14,7 @@
 {% block content %}
 <div class="container">
     <h1>{{ song.name }}</h1>
-    <img src="{{ url_for('static', filename=song.image_url.split('static/')[1]) }}" alt="Album Cover" style="width:300px;height:300px;">
+    <img src="{{ url_for('static', filename=song.image_url) }}" alt="Album Cover" style="width:300px;height:300px;">
 </div>
 
 <script>

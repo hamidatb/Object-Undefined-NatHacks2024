@@ -3,57 +3,116 @@
 {% block quadrant_buttons %}
 <div id="quadrant-buttons">
     <!-- Upper-left 'Home' button -->
-    <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">Home</button>
+    <button id="button-top-left" class="quadrant-button" data-url="{{ url_for('index') }}">🏠 NeuroTune Home </button>
     <!-- Bottom-left 'Rate' button -->
-    <button id="button-bottom-left" class="quadrant-button" data-action="rate">Rate</button>
+    <button id="button-bottom-left" class="quadrant-button" data-action="rate">⭐ Rate</button>
     <!-- Bottom-right 'Pause' button -->
-    <button id="button-bottom-right" class="quadrant-button" data-action="pause">Pause</button>
+    <button id="button-bottom-right" class="quadrant-button" data-action="pause">⏸️ </button>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>{{ song.name }}</h1>
-    <img src="{{ url_for('static', filename=song['image_url']) }}" alt="Album Cover" style="width:300px;height:300px;">
-    <audio id="audio-player" src="{{ url_for('static', filename=song['file_path']) }}" autoplay></audio>
+    <div class="album-section">
+        <img class="album-cover" src="{{ url_for('static', filename=song.image_url) }}" alt="Album Cover">
+        <div class="song-details">
+            <h1 class="song-title">{{ song.name }}</h1>
+            <div class="custom-audio-player">
+                <div class="progress-circle" id="progress-circle">
+                    <svg class="progress-svg" width="120" height="120">
+                        <circle class="progress-bg" cx="60" cy="60" r="55" stroke="#e0e0e0" stroke-width="10" fill="none"/>
+                        <circle class="progress-bar" cx="60" cy="60" r="55" stroke="#1db954" stroke-width="10" fill="none" 
+                            stroke-dasharray="345.575" stroke-dashoffset="345.575" id="progress"/>
+                    </svg>
+                    <div class="time-display" id="time-display">0:00 / 0:00</div>
+                </div>
+                <div class="audio-controls">
+                    <div class="play-pause-btn" id="play-pause-btn">▶️</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+
 <script>
+// Custom audio play funtionality.
 document.addEventListener('DOMContentLoaded', () => {
-    const audioPlayer = document.getElementById('audio-player');
+    const audio = new Audio('{{ url_for("static", filename=song.file_path) }}');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const timeDisplay = document.getElementById('time-display');
+    const progressBar = document.getElementById('progress-bar');
+    const progress = document.getElementById('progress');
 
-    const buttons = {
-        'top-left': document.getElementById('button-top-left'),
-        'bottom-left': document.getElementById('button-bottom-left'),
-        'bottom-right': document.getElementById('button-bottom-right'),
-    };
+    let isPlaying = false;
 
-    // Set up button click handlers
-    setupButtonClickHandlers();
+    playPauseBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            audio.pause();
+            playPauseBtn.textContent = '▶️'; // Play icon
+        } else {
+            audio.play();
+            playPauseBtn.textContent = '⏸️'; // Pause icon
+        }
+        isPlaying = !isPlaying;
+    });
 
-    function setupButtonClickHandlers() {
-        Object.values(buttons).forEach(button => {
-            const url = button.getAttribute('data-url');
-            const action = button.getAttribute('data-action');
-            button.addEventListener('click', () => {
-                if (url) {
-                    window.location.href = url;
-                } else if (action) {
-                    if (action === 'rate') {
-                        window.location.href = "{{ url_for('rate_song_view') }}";
-                    } else if (action === 'pause') {
-                        if (audioPlayer.paused) {
-                            audioPlayer.play();
-                            button.textContent = 'Pause';
-                        } else {
-                            audioPlayer.pause();
-                            button.textContent = 'Play';
-                        }
-                    }
-                }
-            });
-        });
+    audio.addEventListener('timeupdate', () => {
+        const currentTime = formatTime(audio.currentTime);
+        const duration = formatTime(audio.duration);
+        timeDisplay.textContent = `${currentTime} / ${duration}`;
+        const progressPercent = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = `${progressPercent}%`;
+    });
+
+    progressBar.addEventListener('click', (e) => {
+        const clickX = e.offsetX;
+        const barWidth = progressBar.offsetWidth;
+        const newTime = (clickX / barWidth) * audio.duration;
+        audio.currentTime = newTime;
+    });
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const audio = new Audio('{{ url_for("static", filename=song.file_path) }}');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const timeDisplay = document.getElementById('time-display');
+    const progress = document.getElementById('progress');
+
+    let isPlaying = false;
+
+    playPauseBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            audio.pause();
+            playPauseBtn.textContent = '▶️'; // Play icon
+        } else {
+            audio.play();
+            playPauseBtn.textContent = '⏸️'; // Pause icon
+        }
+        isPlaying = !isPlaying;
+    });
+
+    audio.addEventListener('timeupdate', () => {
+        const currentTime = formatTime(audio.currentTime);
+        const duration = formatTime(audio.duration);
+        timeDisplay.textContent = `${currentTime} / ${duration}`;
+        const progressPercent = (audio.currentTime / audio.duration);
+        const dashOffset = 345.575 * (1 - progressPercent);
+        progress.style.strokeDashoffset = dashOffset;
+    });
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+});
+
 </script>
 {% endblock %}

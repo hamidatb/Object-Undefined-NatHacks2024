@@ -9,6 +9,5 @@ python-dotenv
 imutils
 Flask-SocketIO
 keras
-tensorflow
 eventlet
 screeninfo
