@@ -10,8 +10,6 @@ import os
 import pickle
 import pandas as pd
 from dotenv import load_dotenv
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 from utils.predict_quadrant import QuadrantPredictor
 from utils.sample_mood_model import MoodModel
 import cv2
@@ -28,19 +26,6 @@ app.config['WTF_CSRF_ENABLED'] = False
 
 # Initialize SocketIO with the app
 socketio = SocketIO(app, cors_allowed_origins="*")
-
-# Spotify API credentials
-SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
-SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
-SPOTIPY_REDIRECT_URI = os.getenv('SPOTIPY_REDIRECT_URI')
-
-SCOPE = 'user-read-playback-state,user-modify-playback-state,playlist-read-private'
-
-# Initialize Spotify client
-sp_oauth = SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
-                        client_secret=SPOTIPY_CLIENT_SECRET,
-                        redirect_uri=SPOTIPY_REDIRECT_URI,
-                        scope=SCOPE)
 
 # Load or regenerate the mood detection model
 model_path = os.path.join('models', 'mood_model.pkl')

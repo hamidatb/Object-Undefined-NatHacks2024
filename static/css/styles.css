@@ -1,5 +1,5 @@
 /* Import the font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
 
 /* General Styling */
 body {
@@ -77,7 +77,7 @@ button:hover {
     width: 520px;
     height: 520px;
     border-radius: 20px;
-    box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 20px 20px rgba(78, 70, 32, 0.15);
 }
 
 .song-details {
@@ -88,7 +88,7 @@ button:hover {
 
 .song-title {
     font-size: 3rem;
-    font-weight: lighter;
+    font-weight: bold;
     margin: 10px 0;
     color: #42350b;
 }
@@ -125,7 +125,7 @@ button:hover {
 button {
     padding: 15px 30px;
     font-size: 1.5rem;
-    font-family: 'Roboto', sans-serif; /* Minimalistic and clean font */
+    font-family: 'Rubik', sans-serif; /* Minimalistic and clean font */
     font-weight: bold;                /* Bold style */
     background-color: #342E1B;
     color: #FFE695;
@@ -146,7 +146,7 @@ button:hover {
     position: fixed;
     width: 150px;
     height: 150px;
-    font-family: 'Roboto', sans-serif; /* Minimalistic and clean font */
+    font-family: 'Rubik', sans-serif; /* Minimalistic and clean font */
     font-weight: lighter;                 /* Bold style */
     background-color: #342E1B;
     color: #FFE695;
@@ -198,7 +198,6 @@ button:hover {
     border-radius: 100px;
     height: 400px;
     width: 500px;
-    font-size: 6rem;
 }
 
 /* Ensure buttons are accessible */
@@ -206,4 +205,5 @@ button:hover {
     background-color: #57472F;
     transform: scale(1.05);
     transition: 0.3s ease;
+    font-size: 2.4rem;
 }
