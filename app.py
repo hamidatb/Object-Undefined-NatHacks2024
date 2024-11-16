@@ -21,7 +21,7 @@ import sys
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = os.ra('SECRET_KEY')
 app.config['WTF_CSRF_ENABLED'] = False
 
 # Initialize SocketIO with the app
